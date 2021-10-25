@@ -1,0 +1,27 @@
+.form {
+  display: flex;
+  gap: 2rem;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  height: 100%;
+
+  &__item {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: stretch;
+    gap: 1rem;
+
+    color: var(--ff-disabled-color);
+
+    &:focus-within {
+      color: white;
+    }
+
+    &--actions {
+      flex-direction: row;
+    }
+  }
+}
