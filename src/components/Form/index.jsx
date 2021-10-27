@@ -1,18 +1,33 @@
 import styles from '../../styles/Form/Main.module.scss';
 
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import Input from './Input';
 import Label from './Label';
 
 function Form({ onLogin }) {
   const [user, setUser] = useState({ username: '', password: '' });
 
+  const handleSubmit = useCallback(
+    (ev) => {
+      ev.preventDefault();
+      const username = user.username.trim();
+      const password = user.password.trim();
+
+      if (!username || !password) return;
+      if (username.length < 4 || password.length < 8) return;
+
+      onLogin({ username, password });
+    },
+    [user, onLogin],
+  );
+
+  const handleReset = useCallback((ev) => {
+    ev.preventDefault();
+    setUser({ username: '', password: '' });
+  }, []);
+
   return (
-    <form
-      className={styles.form}
-      onSubmit={(ev) => ev.preventDefault()}
-      onReset={(ev) => ev.preventDefault()}
-    >
+    <form className={styles.form} onSubmit={handleSubmit} onReset={handleReset}>
       <div className={styles.form__item}>
         <Label htmlFor={'username'}>Username</Label>
         <Input
