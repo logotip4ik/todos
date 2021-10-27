@@ -1,0 +1,47 @@
+.input {
+  width: 90vw;
+  max-width: 400px;
+
+  font: inherit;
+  font-size: 1.125rem;
+  color: var(--ff-disabled-color);
+
+  padding: 0.25rem 0.125rem;
+  background-color: transparent;
+  outline: none;
+  border: none;
+  border-bottom: 1px solid var(--ff-disabled-color);
+
+  &:focus,
+  &:hover {
+    color: var(--ff-color);
+    border-bottom-color: var(--ff-color);
+  }
+
+  &__wrapper {
+    position: relative;
+
+    width: min-content;
+    height: auto;
+
+    &::after {
+      content: '';
+
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translate(-50%, -50%) scaleX(0);
+
+      width: 100%;
+      height: 2px;
+
+      background-color: var(--ff-color);
+
+      transition: transform 0.4s ease;
+    }
+
+    &:focus-within::after {
+      transform: translate(-50%, -50%) scaleX(1);
+    }
+  }
+}
