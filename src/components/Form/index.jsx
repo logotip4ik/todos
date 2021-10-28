@@ -16,7 +16,7 @@ function Form({ onLogin }) {
       if (!username || !password) return;
       if (username.length < 4 || password.length < 8) return;
 
-      onLogin({ username, password });
+      onLogin(username, password);
     },
     [user, onLogin],
   );
