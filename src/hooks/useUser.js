@@ -23,11 +23,11 @@ function useUser() {
 
     gunUser.create(username, password, ({ err }) => {
       // todo: add better error handling
-      console.log(err);
+      console.log('err from creating phase:', err);
       if (err !== 'User already created!' || !err) return setIsLoading(false);
 
       gunUser.auth(username, password, ({ err }) => {
-        console.log(err);
+        console.log('err from auth phase', err);
         if (err) return setIsLoading(false);
 
         setUser(userObject);
@@ -51,7 +51,7 @@ function useUser() {
 
   return {
     gun: gunInstance,
-    gunUser: gunInstance.user,
+    gunUser: gunInstance.user(),
     user,
     loginUser,
     isUserLoading: isLoading,
