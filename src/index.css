@@ -31,3 +31,10 @@ body {
 #root {
   height: 100%;
 }
+
+@media screen and (max-width: 600px) {
+  html,
+  body {
+    font-size: 14px;
+  }
+}
