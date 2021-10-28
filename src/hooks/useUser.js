@@ -3,7 +3,7 @@ import Gun from 'gun/gun';
 import 'gun/sea';
 import constants from '../constants';
 
-const hosts = ['http://localhost:8080/gun'];
+const hosts = ['http://192.168.88.16:8080/gun'];
 const config = { peers: hosts, localStorage: true, radisk: false };
 const gunInstance = Gun(config);
 
