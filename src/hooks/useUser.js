@@ -1,17 +1,39 @@
 import { useState, useEffect, useCallback } from 'react';
+import Gun from 'gun/gun';
+import 'gun/sea';
 import constants from '../constants';
+
+const hosts = ['http://localhost:8080/gun'];
+const config = { peers: hosts, localStorage: true, radisk: false };
+const gunInstance = Gun(config);
 
 function useUser() {
   const [isLoading, setIsLoading] = useState(true);
   const [user, setUser] = useState(null);
 
   const loginUser = useCallback((username, password) => {
-    const userObject = { username: username.trim(), password: password.trim() };
+    setIsLoading(true);
+    const userObject = { username, password };
     window.localStorage.setItem(
       constants.DB_PREFIX + 'user',
       JSON.stringify(userObject),
     );
-    setUser(userObject);
+
+    const gunUser = gunInstance.user();
+
+    gunUser.create(username, password, ({ err }) => {
+      // todo: add better error handling
+      console.log(err);
+      if (err !== 'User already created!' || !err) return setIsLoading(false);
+
+      gunUser.auth(username, password, ({ err }) => {
+        console.log(err);
+        if (err) return setIsLoading(false);
+
+        setUser(userObject);
+        setIsLoading(false);
+      });
+    });
   }, []);
 
   useEffect(() => {
@@ -20,13 +42,21 @@ function useUser() {
     if (!windowUser) return setIsLoading(false);
 
     try {
-      setUser(JSON.parse(windowUser));
-    } catch (error) {}
-
-    setIsLoading(false);
+      const parsedUser = JSON.parse(windowUser);
+      loginUser(parsedUser.username, parsedUser.password);
+    } catch (error) {
+      setIsLoading(false);
+    }
   }, []);
 
-  return { user, loginUser, isUserLoading: isLoading };
+  return {
+    gun: gunInstance,
+    gunUser: gunInstance.user,
+    user,
+    loginUser,
+    isUserLoading: isLoading,
+    isLoggedIn: user?.username && user?.password,
+  };
 }
 
 export default useUser;
