@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import Gun from 'gun/gun';
 import 'gun/sea';
 import constants from '../constants';
@@ -6,56 +6,70 @@ import constants from '../constants';
 const hosts = ['http://192.168.88.16:8080/gun'];
 const config = { peers: hosts, localStorage: true, radisk: false };
 const gunInstance = Gun(config);
+const gunInstanceUser = gunInstance.user();
+
+const createUser = (username, password) =>
+  new Promise((resolve, reject) => {
+    gunInstanceUser.create(username, password, ({ err }) => {
+      if (err) reject(err);
+
+      window.localStorage.setItem(
+        constants.DB_PREFIX + 'user',
+        JSON.stringify({
+          username,
+          password,
+        }),
+      );
+      resolve({ username, password });
+    });
+  });
+
+const loginUser = (username, password) =>
+  new Promise((resolve, reject) => {
+    gunInstanceUser.auth(username, password, ({ err }) => {
+      if (err) return reject(err);
+
+      window.localStorage.setItem(
+        constants.DB_PREFIX + 'user',
+        JSON.stringify({
+          username,
+          password,
+        }),
+      );
+
+      resolve({ username, password });
+    });
+  });
 
 function useUser() {
   const [isLoading, setIsLoading] = useState(true);
-  const [user, setUser] = useState(null);
-
-  const loginUser = useCallback((username, password) => {
-    setIsLoading(true);
-    const userObject = { username, password };
-    window.localStorage.setItem(
-      constants.DB_PREFIX + 'user',
-      JSON.stringify(userObject),
-    );
-
-    const gunUser = gunInstance.user();
-
-    gunUser.create(username, password, ({ err }) => {
-      // todo: add better error handling
-      console.log('err from creating phase:', err);
-      if (err !== 'User already created!' || !err) return setIsLoading(false);
-
-      gunUser.auth(username, password, ({ err }) => {
-        console.log('err from auth phase', err);
-        if (err) return setIsLoading(false);
-
-        setUser(userObject);
-        setIsLoading(false);
-      });
-    });
-  }, []);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
+    window.$gun = gunInstance;
+    gunInstance.on('auth', () => setIsLoggedIn(true));
     const windowUser = localStorage.getItem(constants.DB_PREFIX + 'user');
 
     if (!windowUser) return setIsLoading(false);
 
     try {
       const parsedUser = JSON.parse(windowUser);
-      loginUser(parsedUser.username, parsedUser.password);
+      loginUser(parsedUser.username, parsedUser.password)
+        .then((userObj) => console.log('tried to authenticate user: ', userObj))
+        .catch((err) => console.log(err))
+        .finally(() => setIsLoading(false));
     } catch (error) {
       setIsLoading(false);
     }
   }, []);
 
   return {
-    gun: gunInstance,
-    gunUser: gunInstance.user(),
-    user,
+    gun: () => gunInstance,
+    gunUser: () => gunInstanceUser,
+    createUser,
     loginUser,
     isUserLoading: isLoading,
-    isLoggedIn: user?.username && user?.password,
+    isUserLoggedIn: isLoggedIn,
   };
 }
 
