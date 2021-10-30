@@ -4,7 +4,7 @@ import { useCallback, useState } from 'react';
 import Input from './Input';
 import Label from './Label';
 
-function Form({ onLogin }) {
+function Form({ onCreate, onLogin }) {
   const [user, setUser] = useState({ username: '', password: '' });
 
   const handleSubmit = useCallback(
@@ -14,11 +14,18 @@ function Form({ onLogin }) {
       const password = user.password.trim();
 
       if (!username || !password) return;
-      if (username.length < 4 || password.length < 8) return;
+      if (username.length < 8 || password.length < 8) return;
 
-      onLogin(username, password);
+      if (ev.nativeEvent.submitter.dataset.type === 'login')
+        onLogin(username, password).catch((err) =>
+          console.log('from login', err),
+        );
+      if (ev.nativeEvent.submitter.dataset.type === 'create')
+        onCreate(username, password).catch((err) =>
+          console.log('from creating', err),
+        );
     },
-    [user, onLogin],
+    [user, onLogin, onCreate],
   );
 
   const handleReset = useCallback((ev) => {
@@ -46,7 +53,12 @@ function Form({ onLogin }) {
         />
       </div>
       <div className={`${styles.form__item} ${styles['form__item--actions']}`}>
-        <button type={'submit'}>Login</button>
+        <button type={'submit'} data-type="login">
+          Login
+        </button>
+        <button type={'submit'} data-type="create">
+          Create
+        </button>
         <button type={'reset'}>Reset</button>
       </div>
     </form>
