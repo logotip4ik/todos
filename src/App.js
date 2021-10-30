@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from 'framer-motion';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import useUser from './hooks/useUser';
 import constants from './constants';
 
@@ -17,18 +17,25 @@ const anim = { opacity: 1 };
 function App() {
   const [appState, setAppState] = useState(constants.IDLE);
   const [rawTodos, setRawTodos] = useState(new Set());
-  const { gunUser, loginUser, isLoggedIn, isUserLoading } = useUser();
+  const { gunUser, loginUser, createUser, isUserLoggedIn, isUserLoading } =
+    useUser();
+
+  const handleCreate = useCallback(
+    (todo) => {
+      gunUser().get('todos').set(todo);
+      setAppState(constants.IDLE);
+    },
+    [gunUser],
+  );
 
   useEffect(() => {
-    gunUser
+    if (!isUserLoggedIn) return;
+
+    gunUser()
       .get('todos')
       .map()
-      .on((data) => setRawTodos((todos) => new Set([...todos, data])));
-  }, []);
-
-  useEffect(() => {
-    console.log(rawTodos);
-  }, [rawTodos]);
+      .on((todo) => setRawTodos((todos) => new Set([...todos, todo])));
+  }, [isUserLoggedIn]);
 
   return (
     <>
@@ -37,7 +44,7 @@ function App() {
           <motion.div initial={exit} animate={anim} exit={exit} key={1}>
             <Loader />
           </motion.div>
-        ) : !isLoggedIn ? (
+        ) : !isUserLoggedIn ? (
           <motion.div
             initial={exit}
             animate={anim}
@@ -45,7 +52,7 @@ function App() {
             key={2}
             style={{ height: '100%' }}
           >
-            <Form onLogin={loginUser}></Form>
+            <Form onLogin={loginUser} onCreate={createUser}></Form>
           </motion.div>
         ) : (
           <motion.div initial={exit} animate={anim} exit={exit} key={3}>
@@ -59,7 +66,11 @@ function App() {
         )}
       </AnimatePresence>
 
-      <Creating isOpened={appState === constants.CREATING} />
+      <Creating
+        isOpened={appState === constants.CREATING}
+        onCreate={(todo) => handleCreate(todo)}
+        onClose={() => setAppState(constants.IDLE)}
+      />
     </>
   );
 }
