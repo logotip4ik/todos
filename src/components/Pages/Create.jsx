@@ -1,12 +1,15 @@
-import styles from '../../styles/Pages/Create.module.scss';
-import { useCallback, useState } from 'react';
+import pageStyles from '../../styles/Pages/Create.module.scss';
+import formStyles from '../../styles/Form/Main.module.scss';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { nanoid } from 'nanoid';
 import { AnimatePresence, motion } from 'framer-motion';
+
+import Label from '../Form/Label';
 
 const pageVariants = {
   initial: {
     opacity: 0,
-    scale: 0.98,
+    scale: 0.95,
     translateY: '0%',
   },
   animate: {
@@ -26,7 +29,8 @@ const pageVariants = {
   },
 };
 
-function Create({ isOpened, onCreate, ...props }) {
+function Create({ isOpened, onCreate, onClose, ...props }) {
+  const textareaRef = useRef(null);
   const [todoText, setTodoText] = useState('');
 
   const handleSubmit = useCallback(
@@ -49,10 +53,19 @@ function Create({ isOpened, onCreate, ...props }) {
     [todoText, onCreate],
   );
 
-  const handleReset = useCallback((ev) => {
-    ev.preventDefault();
-    setTodoText('');
-  }, []);
+  const handleReset = useCallback(
+    (ev) => {
+      ev.preventDefault();
+      onClose();
+      setTodoText('');
+    },
+    [onClose],
+  );
+
+  useEffect(() => {
+    if (!isOpened) return;
+    setTimeout(() => textareaRef.current.focus(), 200);
+  }, [isOpened]);
 
   // [ ] add error handling and show it to user
 
@@ -64,23 +77,31 @@ function Create({ isOpened, onCreate, ...props }) {
           animate="animate"
           exit="exit"
           variants={pageVariants}
-          className={styles.form__wrapper}
+          className={pageStyles.form__wrapper}
           {...props}
         >
           <form
             onSubmit={handleSubmit}
             onReset={handleReset}
-            className={styles.form}
+            className={pageStyles.form}
           >
-            <div className={styles.form__item}>
-              <label htmlFor="data" className={styles.form__item__label}>
+            <div className={formStyles.form__item}>
+              <Label htmlFor="data" className={formStyles.form__item__label}>
                 Text
-              </label>
+              </Label>
               <textarea
+                ref={textareaRef}
                 value={todoText}
                 onChange={({ target }) => setTodoText(target.value)}
-                className={styles.form__item__input}
+                className={formStyles.form__item__input}
               />
+            </div>
+            <div
+              className={`${formStyles.form__item} ${formStyles['form__item--actions']}`}
+              style={{ justifyContent: 'flex-end' }}
+            >
+              <button type="submit">Add</button>
+              <button type="reset">Reset</button>
             </div>
           </form>
         </motion.div>
