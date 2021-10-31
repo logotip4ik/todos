@@ -8,12 +8,6 @@ import {
 } from 'framer-motion';
 import { useEffect, useState } from 'react';
 
-const numberVariants = {
-  initial: { y: '-150%' },
-  animate: { y: '0%' },
-  exit: { y: '150%' },
-};
-
 const getTime = () =>
   Intl.DateTimeFormat('en', {
     hour: '2-digit',
