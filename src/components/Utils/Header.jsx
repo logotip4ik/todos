@@ -2,7 +2,7 @@ import styles from '../../styles/Utils/Header.module.scss';
 
 import { useViewportScroll, useTransform, motion } from 'framer-motion';
 
-const breakpoint = 200;
+const breakpoint = 100;
 
 function Header() {
   const { scrollY } = useViewportScroll();
