@@ -49,6 +49,7 @@ function Create({ isOpened, onCreate, onClose, ...props }) {
       };
 
       onCreate(newTodo);
+      setTodoText('');
     },
     [todoText, onCreate],
   );
