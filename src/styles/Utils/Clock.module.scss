@@ -1,0 +1,29 @@
+.clock {
+  position: fixed;
+  top: 6.5rem;
+  right: 2rem;
+  z-index: 11;
+
+  font: inherit;
+  font-size: 1.75rem;
+  font-weight: 200;
+  letter-spacing: 0.125px;
+  color: white;
+
+  // width: 8ch;
+  // height: 3rem;
+
+  padding: 0.5rem 1rem;
+  border: none;
+  outline: none;
+  border-radius: 0.5rem;
+  background-color: rgba($color: #ddd, $alpha: 0.175);
+  backdrop-filter: blur(0.125rem);
+
+  overflow: hidden;
+
+  &__number {
+    position: absolute;
+    display: inline-block;
+  }
+}
