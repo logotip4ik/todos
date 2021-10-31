@@ -18,12 +18,14 @@ function TodoListSectionItem({ todo }) {
         todo.completed ? styles['todo--completed'] : ''
       }`}
     >
-      <button
+      <motion.button
         className={`${styles.todo__button} ${
           todo.completed ? styles['todo__button--completed'] : ''
         }`}
         onClick={toggleComplete}
-      ></button>
+        whileTap={{ scale: 0.97 }}
+        transition={{ ease: 'anticipate' }}
+      ></motion.button>
       <p
         className={`${styles.todo__text} ${
           todo.completed ? styles['todo__text--completed'] : ''
