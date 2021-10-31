@@ -1,25 +1,62 @@
 .todo {
+  --br-radius: 0.25rem;
+
   display: grid;
   grid-template-columns: 2rem auto;
   align-items: center;
   gap: 2rem;
 
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+
   padding: 2.5rem 2rem;
-  border-radius: 0.25rem;
+  border-radius: var(--br-radius);
   background-color: rgba($color: #ddd, $alpha: 0.075);
   box-shadow: 0px 4px 4px 0px rgba($color: #000, $alpha: 0.25);
 
   &__text {
+    position: relative;
+
     width: 100%;
     font-size: 2rem;
     white-space: nowrap;
 
     text-overflow: ellipsis;
     overflow: hidden;
+
+    &::after {
+      --strike-height: 3px;
+      content: '';
+
+      position: absolute;
+      top: calc(50% - var(--strike-height));
+      left: 0;
+
+      width: 100%;
+      height: var(--strike-height);
+
+      border-radius: 0.125rem;
+      background-color: var(--primary-color);
+
+      transform: scaleX(0);
+      transform-origin: right center;
+
+      transition: transform 0.4s ease;
+    }
+
+    &--completed {
+      color: var(--ff-disabled-color);
+
+      &::after {
+        transform: scaleX(1);
+        transform-origin: left center;
+      }
+    }
   }
 
   &__button {
-    --size: 2.125rem;
+    --size: 2rem;
 
     position: relative;
 
@@ -34,13 +71,14 @@
     cursor: pointer;
 
     &::after {
-      --button-gap: 7px;
+      --button-gap: 8px;
+      --initial-translate: translate(-52%, -52%);
       content: '';
 
       position: absolute;
       top: 50%;
       left: 50%;
-      transform: translate(-51%, -49%) scale(0);
+      transform: var(--initial-translate) scale(0);
 
       width: calc(var(--size) - var(--button-gap));
       height: calc(var(--size) - var(--button-gap));
@@ -51,7 +89,34 @@
     }
 
     &--completed::after {
-      transform: translate(-51%, -49%) scale(1);
+      transform: var(--initial-translate) scale(1);
+      transition-duration: 0.02s;
     }
+  }
+
+  &::after {
+    --initial-translate: translate(-50%, -50%);
+    content: '';
+
+    position: absolute;
+    top: 50%;
+    left: 50%;
+
+    width: 100vmax;
+    height: 100vmax;
+
+    border-radius: 50%;
+    background-color: hsla(323, 15%, 5%, 0.5);
+    pointer-events: none;
+
+    transform: var(--initial-translate) scale(0);
+    transform-origin: right bottom;
+
+    transition: transform 0.8s ease;
+  }
+
+  &--completed::after {
+    transform: var(--initial-translate) scale(1);
+    transform-origin: left top;
   }
 }
