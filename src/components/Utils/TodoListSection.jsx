@@ -66,9 +66,11 @@ function TodoListSection({ date, todos }) {
         )}
       </AnimatePresence>
       <motion.ul layout className={styles.section__todos}>
-        {todos.map((todo) => (
-          <TodoListSectionItem key={todo.id} todo={todo} />
-        ))}
+        {todos
+          .sort((todo) => todo.completed)
+          .map((todo) => (
+            <TodoListSectionItem key={todo.id} todo={todo} />
+          ))}
       </motion.ul>
     </motion.li>
   );
