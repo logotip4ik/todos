@@ -41,11 +41,15 @@ const loginUser = (username, password) =>
     });
   });
 
+let triedToAuth = false;
+
 function useUser() {
   const [isLoading, setIsLoading] = useState(true);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
+    if (triedToAuth) return;
+    triedToAuth = true;
     window.$gun = gunInstance;
     gunInstance.on('auth', () => setIsLoggedIn(true));
     const windowUser = localStorage.getItem(constants.DB_PREFIX + 'user');
