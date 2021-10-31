@@ -1,0 +1,36 @@
+.section {
+  position: relative;
+
+  width: 100%;
+
+  &__header {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+  }
+
+  &__todos {
+    display: flex;
+    justify-content: flex-start;
+    align-items: stretch;
+    flex-direction: column;
+    gap: 1rem;
+
+    list-style-type: none;
+  }
+
+  &::after {
+    content: '';
+
+    position: absolute;
+    bottom: calc(var(--pd) / 2 * -1);
+    left: 0;
+
+    width: calc(100vw - var(--pd));
+    height: 1px;
+    background-color: #333;
+  }
+
+  &:last-child::after {
+    display: none;
+  }
+}

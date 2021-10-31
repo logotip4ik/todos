@@ -1,0 +1,57 @@
+.todo {
+  display: grid;
+  grid-template-columns: 2rem auto;
+  align-items: center;
+  gap: 2rem;
+
+  padding: 2.5rem 2rem;
+  border-radius: 0.25rem;
+  background-color: rgba($color: #ddd, $alpha: 0.075);
+  box-shadow: 0px 4px 4px 0px rgba($color: #000, $alpha: 0.25);
+
+  &__text {
+    width: 100%;
+    font-size: 2rem;
+    white-space: nowrap;
+
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+
+  &__button {
+    --size: 2.125rem;
+
+    position: relative;
+
+    width: var(--size);
+    height: var(--size);
+
+    outline: none;
+    border: 2px solid var(--primary-color);
+    border-radius: 50%;
+    background-color: transparent;
+
+    cursor: pointer;
+
+    &::after {
+      --button-gap: 7px;
+      content: '';
+
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-51%, -49%) scale(0);
+
+      width: calc(var(--size) - var(--button-gap));
+      height: calc(var(--size) - var(--button-gap));
+
+      border-radius: 50%;
+      background-color: var(--primary-color);
+      transition: transform 0.4s ease;
+    }
+
+    &--completed::after {
+      transform: translate(-51%, -49%) scale(1);
+    }
+  }
+}
