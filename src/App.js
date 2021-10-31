@@ -5,6 +5,7 @@ import constants from './constants';
 
 import Form from './components/Form';
 import Loader from './components/Loader';
+import Clock from './components/Utils/Clock';
 import Header from './components/Utils/Header';
 import TodoList from './components/Utils/TodoList';
 import BottomBar from './components/Utils/BottomBar';
@@ -57,6 +58,7 @@ function App() {
         ) : (
           <motion.div initial={exit} animate={anim} exit={exit} key={3}>
             <Header />
+            <Clock />
             <TodoList rawTodos={rawTodos} />
             <BottomBar
               appState={appState}
