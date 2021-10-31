@@ -22,7 +22,7 @@ function App() {
 
   const handleCreate = useCallback(
     (todo) => {
-      gunUser().get('todos').set(todo);
+      gunUser().get('todos').get(todo.id).put(todo);
       setAppState(constants.IDLE);
     },
     [gunUser],
