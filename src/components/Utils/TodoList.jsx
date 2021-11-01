@@ -10,7 +10,7 @@ function TodoList({ rawTodos, onDeleteTodo }) {
   const [selectedTodo, setSelectedTodo] = useState(null);
 
   const todos = useMemo(() => {
-    const todosArray = Array.from(rawTodos);
+    const todosArray = Object.values(rawTodos);
 
     // this function is structuring date in a proper way
     // [{ id: 1, data: "hello world, createdAt: "Sat, 31 Oct 2021"}] ->

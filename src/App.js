@@ -17,7 +17,7 @@ const anim = { opacity: 1 };
 
 function App() {
   const [appState, setAppState] = useState(constants.IDLE);
-  const [rawTodos, setRawTodos] = useState(new Set());
+  const [rawTodos, setRawTodos] = useState({});
   const { gunUser, loginUser, createUser, isUserLoggedIn, isUserLoading } =
     useUser();
 
@@ -43,9 +43,10 @@ function App() {
     gunUser()
       .get('todos')
       .map()
-      .on((todo) =>
-        todo ? setRawTodos((todos) => new Set([...todos, todo])) : null,
-      );
+      .on((todo) => {
+        if (!todo) return;
+        setRawTodos((todos) => ({ ...todos, [todo.id]: todo }));
+      });
   }, [isUserLoggedIn]);
 
   return (
