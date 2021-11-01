@@ -45,14 +45,10 @@ function TodoListSectionItem({
         .back()
         .get('updatedAt')
         .put(todoEv.updatedAt);
-      // gunUser()
-      //   .get('todos')
-      //   .get(todoEv.id)
-      //   .get('updatedAt')
-      //   .put(todoEv.updatedAt);
+
       setIsEditing(false);
     },
-    [gunUser, todo],
+    [gunUser],
   );
 
   const handleDelete = useCallback(
