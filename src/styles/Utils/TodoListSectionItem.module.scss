@@ -7,8 +7,7 @@
   gap: 2rem;
 
   position: relative;
-  isolation: isolate;
-  overflow: hidden;
+  z-index: 999;
 
   padding: 2.5rem 2rem;
   border-radius: var(--br-radius);
@@ -94,29 +93,64 @@
     }
   }
 
+  &__wrapper {
+    position: relative;
+    z-index: 1;
+  }
+
+  &__actions {
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+    gap: 1rem;
+
+    position: absolute;
+    top: calc(100% + 1rem);
+    left: 0;
+    z-index: -99999;
+
+    width: 100%;
+
+    &__button {
+      flex: 1;
+
+      font: inherit;
+      font-size: 1.1rem;
+      color: var(--ff-color);
+
+      width: 100%;
+      padding: 0.5rem 1rem;
+      outline: none;
+      border: none;
+      border-radius: 0.25rem;
+      background-color: hsla(323, 15%, 95%, 0.25);
+
+      cursor: pointer;
+    }
+  }
+
   &::after {
     --initial-translate: translate(-50%, -50%);
     content: '';
 
     position: absolute;
-    top: 50%;
-    left: 50%;
+    top: 0;
+    left: 0;
 
-    width: 100vmax;
-    height: 100vmax;
+    width: 100%;
+    height: 100%;
 
-    border-radius: 50%;
     background-color: hsla(323, 15%, 5%, 0.5);
     pointer-events: none;
 
-    transform: var(--initial-translate) scale(0);
+    transform: scale(0);
     transform-origin: right bottom;
 
     transition: transform 0.8s ease;
   }
 
   &--completed::after {
-    transform: var(--initial-translate) scale(1);
+    transform: scale(1);
     transform-origin: left top;
   }
 }
