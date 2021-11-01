@@ -33,7 +33,13 @@ const headerTextVariants = {
   animate: { opacity: 1 },
 };
 
-function TodoListSection({ date, todos, selectedTodo, onSelectTodo }) {
+function TodoListSection({
+  date,
+  todos,
+  selectedTodo,
+  onSelectTodo,
+  onDeleteTodo,
+}) {
   const [isShowingTimeAgo, setIsShowingTimeAgo] = useState(true);
 
   const toggleShowingTimeAgo = useCallback(() => {
@@ -79,6 +85,7 @@ function TodoListSection({ date, todos, selectedTodo, onSelectTodo }) {
               todo={todo}
               selectedTodo={selectedTodo}
               onSelectTodo={(todoEv) => onSelectTodo(todoEv)}
+              onDeleteTodo={(todoEv) => onDeleteTodo(todoEv)}
             />
           ))}
       </motion.ul>

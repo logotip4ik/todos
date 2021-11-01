@@ -29,13 +29,23 @@ function App() {
     [gunUser],
   );
 
+  const handleDelete = useCallback(
+    (todo) => {
+      const todos = Array.from(rawTodos);
+      setRawTodos(todos.filter(({ id }) => id !== todo.id));
+    },
+    [rawTodos],
+  );
+
   useEffect(() => {
     if (!isUserLoggedIn) return;
 
     gunUser()
       .get('todos')
       .map()
-      .on((todo) => setRawTodos((todos) => new Set([...todos, todo])));
+      .on((todo) =>
+        todo ? setRawTodos((todos) => new Set([...todos, todo])) : null,
+      );
   }, [isUserLoggedIn]);
 
   return (
@@ -59,7 +69,10 @@ function App() {
           <motion.div initial={exit} animate={anim} exit={exit} key={3}>
             <Header />
             <Clock />
-            <TodoList rawTodos={rawTodos} />
+            <TodoList
+              rawTodos={rawTodos}
+              onDeleteTodo={(todo) => handleDelete(todo)}
+            />
             <BottomBar
               appState={appState}
               onClickCreate={(state) => setAppState(state)}

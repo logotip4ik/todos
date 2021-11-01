@@ -9,7 +9,12 @@ const actionsVariants = {
   animate: { opacity: 1, scale: 1.1, y: '0%' },
 };
 
-function TodoListSectionItem({ todo, selectedTodo, onSelectTodo }) {
+function TodoListSectionItem({
+  todo,
+  selectedTodo,
+  onSelectTodo,
+  onDeleteTodo,
+}) {
   const { gunUser } = useUser();
 
   const toggleComplete = useCallback(
@@ -26,6 +31,15 @@ function TodoListSectionItem({ todo, selectedTodo, onSelectTodo }) {
       onSelectTodo(selectedTodo?.id === todo.id ? null : todo);
     },
     [onSelectTodo, selectedTodo, todo],
+  );
+
+  const handleDelete = useCallback(
+    (ev) => {
+      ev.stopPropagation();
+      onDeleteTodo(todo);
+      gunUser().get('todos').get(todo.id).put(null);
+    },
+    [gunUser, todo, onDeleteTodo],
   );
 
   // TODO idk, why but buttons is not under the card, try ti fix later
@@ -74,7 +88,11 @@ function TodoListSectionItem({ todo, selectedTodo, onSelectTodo }) {
             <motion.button layout className={styles.todo__actions__button}>
               Edit
             </motion.button>
-            <motion.button layout className={styles.todo__actions__button}>
+            <motion.button
+              layout
+              className={styles.todo__actions__button}
+              onClick={handleDelete}
+            >
               Delete
             </motion.button>
           </motion.div>

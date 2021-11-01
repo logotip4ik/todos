@@ -6,7 +6,7 @@ import TodoListSection from './TodoListSection';
 
 const dateLength = 16;
 
-function TodoList({ rawTodos }) {
+function TodoList({ rawTodos, onDeleteTodo }) {
   const [selectedTodo, setSelectedTodo] = useState(null);
 
   const todos = useMemo(() => {
@@ -39,6 +39,7 @@ function TodoList({ rawTodos }) {
           todos={todos[date]}
           selectedTodo={selectedTodo}
           onSelectTodo={(todo) => setSelectedTodo(todo)}
+          onDeleteTodo={(todo) => onDeleteTodo(todo)}
         />
       ))}
     </motion.ol>
