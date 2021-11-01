@@ -1,7 +1,7 @@
 import styles from '../../styles/Utils/TodoListSection.module.scss';
 
 import { motion, AnimatePresence } from 'framer-motion';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { format, register } from 'timeago.js';
 import TodoListSectionItem from './TodoListSectionItem';
 
@@ -33,8 +33,13 @@ const headerTextVariants = {
   animate: { opacity: 1 },
 };
 
-function TodoListSection({ date, todos }) {
+function TodoListSection({ date, todos, selectedTodo, onSelectTodo }) {
   const [isShowingTimeAgo, setIsShowingTimeAgo] = useState(true);
+
+  const toggleShowingTimeAgo = useCallback(() => {
+    onSelectTodo(null);
+    setIsShowingTimeAgo((bool) => !bool);
+  }, [onSelectTodo]);
 
   return (
     <motion.li layout className={styles.section}>
@@ -47,7 +52,7 @@ function TodoListSection({ date, todos }) {
             variants={headerTextVariants}
             className={styles.section__header}
             key="1"
-            onClick={() => setIsShowingTimeAgo((bool) => !bool)}
+            onClick={toggleShowingTimeAgo}
           >
             {format(date, 'simple_Locale')}
           </motion.h2>
@@ -59,7 +64,7 @@ function TodoListSection({ date, todos }) {
             variants={headerTextVariants}
             className={styles.section__header}
             key="2"
-            onClick={() => setIsShowingTimeAgo((bool) => !bool)}
+            onClick={toggleShowingTimeAgo}
           >
             {date}
           </motion.h2>
@@ -69,7 +74,12 @@ function TodoListSection({ date, todos }) {
         {todos
           .sort((todo) => todo.completed)
           .map((todo) => (
-            <TodoListSectionItem key={todo.id} todo={todo} />
+            <TodoListSectionItem
+              key={todo.id}
+              todo={todo}
+              selectedTodo={selectedTodo}
+              onSelectTodo={() => onSelectTodo(todo.id)}
+            />
           ))}
       </motion.ul>
     </motion.li>

@@ -1,12 +1,14 @@
 import styles from '../../styles/Utils/TodoList.module.scss';
 
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { motion } from 'framer-motion';
 import TodoListSection from './TodoListSection';
 
 const dateLength = 16;
 
 function TodoList({ rawTodos }) {
+  const [selectedTodo, setSelectedTodo] = useState(null);
+
   const todos = useMemo(() => {
     const todosArray = Array.from(rawTodos);
 
@@ -31,7 +33,13 @@ function TodoList({ rawTodos }) {
   return (
     <motion.ol layout className={styles.list}>
       {todosDates.map((date) => (
-        <TodoListSection key={date} date={date} todos={todos[date]} />
+        <TodoListSection
+          key={date}
+          date={date}
+          todos={todos[date]}
+          selectedTodo={selectedTodo}
+          onSelectTodo={(id) => setSelectedTodo(id)}
+        />
       ))}
     </motion.ol>
   );

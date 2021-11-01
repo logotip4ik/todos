@@ -4,12 +4,24 @@ import { useCallback } from 'react';
 import { motion } from 'framer-motion';
 import useUser from '../../hooks/useUser';
 
-function TodoListSectionItem({ todo }) {
+function TodoListSectionItem({ todo, selectedTodo, onSelectTodo }) {
   const { gunUser } = useUser();
 
-  const toggleComplete = useCallback(() => {
-    gunUser().get('todos').get(todo.id).get('completed').put(!todo.completed);
-  }, [todo, gunUser]);
+  const toggleComplete = useCallback(
+    (ev) => {
+      ev.stopPropagation();
+      gunUser().get('todos').get(todo.id).get('completed').put(!todo.completed);
+    },
+    [todo, gunUser],
+  );
+
+  const handleSelect = useCallback(
+    (ev) => {
+      ev.preventDefault();
+      onSelectTodo(todo.id);
+    },
+    [onSelectTodo, todo],
+  );
 
   return (
     <motion.li
@@ -17,6 +29,7 @@ function TodoListSectionItem({ todo }) {
       className={`${styles.todo} ${
         todo.completed ? styles['todo--completed'] : ''
       }`}
+      onClick={handleSelect}
     >
       <motion.button
         className={`${styles.todo__button} ${
