@@ -78,7 +78,7 @@ function TodoListSection({ date, todos, selectedTodo, onSelectTodo }) {
               key={todo.id}
               todo={todo}
               selectedTodo={selectedTodo}
-              onSelectTodo={() => onSelectTodo(todo.id)}
+              onSelectTodo={(todoEv) => onSelectTodo(todoEv)}
             />
           ))}
       </motion.ul>

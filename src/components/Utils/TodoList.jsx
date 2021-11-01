@@ -38,7 +38,7 @@ function TodoList({ rawTodos }) {
           date={date}
           todos={todos[date]}
           selectedTodo={selectedTodo}
-          onSelectTodo={(id) => setSelectedTodo(id)}
+          onSelectTodo={(todo) => setSelectedTodo(todo)}
         />
       ))}
     </motion.ol>

@@ -18,9 +18,9 @@ function TodoListSectionItem({ todo, selectedTodo, onSelectTodo }) {
   const handleSelect = useCallback(
     (ev) => {
       ev.preventDefault();
-      onSelectTodo(todo.id);
+      onSelectTodo(selectedTodo.id === todo.id ? null : selectedTodo);
     },
-    [onSelectTodo, todo],
+    [onSelectTodo, selectedTodo, todo],
   );
 
   return (
