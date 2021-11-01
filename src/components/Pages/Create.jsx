@@ -29,9 +29,16 @@ const pageVariants = {
   },
 };
 
-function Create({ isOpened, onCreate, onClose, ...props }) {
+function Create({
+  isOpened,
+  initialTodo = {},
+  submitButtonText = 'Add',
+  onCreate,
+  onClose,
+  ...props
+}) {
   const textareaRef = useRef(null);
-  const [todoText, setTodoText] = useState('');
+  const [todoText, setTodoText] = useState(initialTodo.data || '');
 
   const handleSubmit = useCallback(
     (ev) => {
@@ -43,15 +50,17 @@ function Create({ isOpened, onCreate, onClose, ...props }) {
 
       const newTodo = {
         id: nanoid(),
-        data,
         completed: false,
         createdAt: new Date().toUTCString(),
+        ...initialTodo,
+        updatedAt: new Date().toUTCString(),
+        data,
       };
 
       onCreate(newTodo);
       setTodoText('');
     },
-    [todoText, onCreate],
+    [initialTodo, todoText, onCreate],
   );
 
   const handleReset = useCallback(
@@ -101,7 +110,7 @@ function Create({ isOpened, onCreate, onClose, ...props }) {
               className={`${formStyles.form__item} ${formStyles['form__item--actions']}`}
               style={{ justifyContent: 'flex-end' }}
             >
-              <button type="submit">Add</button>
+              <button type="submit">{submitButtonText}</button>
               <button type="reset">Reset</button>
             </div>
           </form>
