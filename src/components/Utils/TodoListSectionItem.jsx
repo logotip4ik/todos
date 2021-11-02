@@ -68,7 +68,10 @@ function TodoListSectionItem({
         className={styles.todo__wrapper}
         animate={{
           marginBottom: selectedTodo?.id === todo.id ? '3.25rem' : '0rem',
+          opacity: 1,
         }}
+        initial={{ opacity: 0 }}
+        exit={{ opacity: 0 }}
       >
         <motion.div
           layout
