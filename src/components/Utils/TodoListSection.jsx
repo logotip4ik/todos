@@ -41,6 +41,7 @@ function TodoListSection({
   onDeleteTodo,
 }) {
   const [isShowingTimeAgo, setIsShowingTimeAgo] = useState(true);
+  const [isCollapsed, setIsCollapsed] = useState(false);
 
   const toggleShowingTimeAgo = useCallback(() => {
     onSelectTodo(null);
@@ -49,36 +50,59 @@ function TodoListSection({
 
   return (
     <motion.li layout className={styles.section}>
-      <AnimatePresence exitBeforeEnter>
-        {isShowingTimeAgo ? (
-          <motion.h2
-            initial="initial"
-            animate="animate"
-            exit="initial"
-            variants={headerTextVariants}
-            className={styles.section__header}
-            key="1"
-            onClick={toggleShowingTimeAgo}
+      <motion.div layout className={styles.section__header}>
+        <AnimatePresence exitBeforeEnter>
+          {isShowingTimeAgo ? (
+            <motion.h2
+              initial="initial"
+              animate="animate"
+              exit="initial"
+              variants={headerTextVariants}
+              className={styles.section__header__title}
+              key="1"
+              onClick={toggleShowingTimeAgo}
+            >
+              {format(date, 'simple_Locale')}
+            </motion.h2>
+          ) : (
+            <motion.h2
+              initial="initial"
+              animate="animate"
+              exit="initial"
+              variants={headerTextVariants}
+              className={styles.section__header__title}
+              key="2"
+              onClick={toggleShowingTimeAgo}
+            >
+              {date}
+            </motion.h2>
+          )}
+        </AnimatePresence>
+        <motion.button
+          className={styles.section__header__button}
+          onClick={() => setIsCollapsed((bool) => !bool)}
+          animate={{ rotate: isCollapsed ? 180 : 0 }}
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            aria-hidden="true"
+            role="img"
+            width="20"
+            height="32"
+            preserveAspectRatio="xMidYMid meet"
+            viewBox="0 0 10 16"
           >
-            {format(date, 'simple_Locale')}
-          </motion.h2>
-        ) : (
-          <motion.h2
-            initial="initial"
-            animate="animate"
-            exit="initial"
-            variants={headerTextVariants}
-            className={styles.section__header}
-            key="2"
-            onClick={toggleShowingTimeAgo}
-          >
-            {date}
-          </motion.h2>
-        )}
-      </AnimatePresence>
+            <path
+              fillRule="evenodd"
+              d="M5 11L0 6l1.5-1.5L5 8.25L8.5 4.5L10 6l-5 5z"
+            ></path>
+          </svg>
+        </motion.button>
+      </motion.div>
       <motion.ul layout className={styles.section__todos}>
         {todos
           .sort((todo) => todo.completed)
+          .filter((todo) => !isCollapsed || !todo.completed)
           .map((todo) => (
             <TodoListSectionItem
               key={todo.id}
