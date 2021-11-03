@@ -1,12 +1,18 @@
 import styles from '../../styles/Utils/TodoList.module.scss';
 
 import { useMemo, useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimateSharedLayout, AnimatePresence } from 'framer-motion';
 import TodoListSection from './TodoListSection';
+import TodoCard from './TodoCard';
 
 const dateLength = 16;
 
-function TodoList({ rawTodos, onDeleteTodo }) {
+function TodoList({
+  rawTodos,
+  isShowingDetails,
+  onDeleteTodo,
+  onIsShowingDetails,
+}) {
   const [selectedTodo, setSelectedTodo] = useState(null);
 
   const todos = useMemo(() => {
@@ -31,18 +37,25 @@ function TodoList({ rawTodos, onDeleteTodo }) {
   }, [todos]);
 
   return (
-    <motion.ol layout className={styles.list}>
-      {todosDates.map((date) => (
-        <TodoListSection
-          key={date}
-          date={date}
-          todos={todos[date]}
-          selectedTodo={selectedTodo}
-          onSelectTodo={(todo) => setSelectedTodo(todo)}
-          onDeleteTodo={(todo) => onDeleteTodo(todo)}
-        />
-      ))}
-    </motion.ol>
+    <AnimateSharedLayout type="crossfade">
+      <motion.ol layout className={styles.list}>
+        {todosDates.map((date) => (
+          <TodoListSection
+            key={date}
+            date={date}
+            todos={todos[date]}
+            selectedTodo={selectedTodo}
+            isShowingDetails={isShowingDetails}
+            onSelectTodo={(todo) => setSelectedTodo(todo)}
+            onDeleteTodo={(todo) => onDeleteTodo(todo)}
+            onShowDetails={(ev) => onIsShowingDetails(ev)}
+          />
+        ))}
+      </motion.ol>
+      <AnimatePresence exitBeforeEnter>
+        {isShowingDetails && selectedTodo && <TodoCard todo={selectedTodo} />}
+      </AnimatePresence>
+    </AnimateSharedLayout>
   );
 }
 

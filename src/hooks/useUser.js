@@ -3,7 +3,13 @@ import Gun from 'gun/gun';
 import 'gun/sea';
 import constants from '../constants';
 
-const hosts = ['http://192.168.88.16:8080/gun'];
+const hosts =
+  process.env.NODE_ENV === 'production'
+    ? [
+        'https://gun-todos.herokuapp.com/gun',
+        'https://flashy-toe-production.up.railway.app/gun',
+      ]
+    : ['http://192.168.88.16:8080/gun'];
 const config = { peers: hosts, localStorage: true, radisk: false };
 const gunInstance = Gun(config);
 const gunInstanceUser = gunInstance.user();

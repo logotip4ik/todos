@@ -23,6 +23,7 @@
 
     text-overflow: ellipsis;
     overflow: hidden;
+    user-select: none;
 
     &::after {
       --strike-height: 3px;

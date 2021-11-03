@@ -2,13 +2,8 @@ import styles from '../../styles/Utils/BottomBar.module.scss';
 import { useCallback } from 'react';
 import { motion } from 'framer-motion';
 
-import constants from '../../constants';
-
-function BottomBar({ appState, onClickCreate }) {
-  const handleCreate = useCallback(() => {
-    if (appState === constants.IDLE) return onClickCreate(constants.CREATING);
-    return onClickCreate(constants.IDLE);
-  }, [appState, onClickCreate]);
+function BottomBar({ isCreating, onClickCreate }) {
+  const handleCreate = useCallback(() => onClickCreate(), [onClickCreate]);
 
   return (
     <div className={styles.bottomBar}>
@@ -18,7 +13,7 @@ function BottomBar({ appState, onClickCreate }) {
           height="1em"
           viewBox="0 0 24 24"
           style={{ originX: '50%', originY: '50%' }}
-          animate={{ rotate: appState === constants.CREATING ? 135 : 0 }}
+          animate={{ rotate: isCreating ? 135 : 0 }}
         >
           <g fill="none">
             <path

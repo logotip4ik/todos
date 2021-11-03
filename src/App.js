@@ -18,6 +18,7 @@ const anim = { opacity: 1 };
 function App() {
   const [appState, setAppState] = useState(constants.IDLE);
   const [rawTodos, setRawTodos] = useState({});
+  const [isShowingDetails, setIsShowingDetails] = useState(false);
   const { gunUser, loginUser, createUser, isUserLoggedIn, isUserLoading } =
     useUser();
 
@@ -36,6 +37,10 @@ function App() {
     },
     [rawTodos],
   );
+
+  useEffect(() => {
+    document.body.style.overflow = isShowingDetails ? 'hidden' : 'auto';
+  }, [isShowingDetails]);
 
   useEffect(() => {
     if (!isUserLoggedIn) return;
@@ -69,14 +74,19 @@ function App() {
         ) : (
           <motion.div initial={exit} animate={anim} exit={exit} key={3}>
             <Header />
-            <Clock />
+            <Clock isShowingDetails={isShowingDetails} />
             <TodoList
               rawTodos={rawTodos}
+              isShowingDetails={isShowingDetails}
               onDeleteTodo={(todo) => handleDelete(todo)}
+              onIsShowingDetails={(bool) => setIsShowingDetails(bool)}
             />
             <BottomBar
-              appState={appState}
-              onClickCreate={(state) => setAppState(state)}
+              isCreating={appState === constants.CREATING || isShowingDetails}
+              onClickCreate={() => {
+                setAppState(constants.IDLE);
+                setIsShowingDetails(false);
+              }}
             />
           </motion.div>
         )}

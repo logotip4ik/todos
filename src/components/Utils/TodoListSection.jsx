@@ -36,9 +36,11 @@ const headerTextVariants = {
 function TodoListSection({
   date,
   todos,
+  isShowingDetails,
   selectedTodo,
   onSelectTodo,
   onDeleteTodo,
+  onShowDetails,
 }) {
   const [isShowingTimeAgo, setIsShowingTimeAgo] = useState(true);
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -108,8 +110,10 @@ function TodoListSection({
               key={todo.id}
               todo={todo}
               selectedTodo={selectedTodo}
+              isShowingDetails={isShowingDetails}
               onSelectTodo={(todoEv) => onSelectTodo(todoEv)}
               onDeleteTodo={(todoEv) => onDeleteTodo(todoEv)}
+              onShowDetails={(ev) => onShowDetails(ev)}
             />
           ))}
       </motion.ul>

@@ -10,11 +10,16 @@ const actionsVariants = {
   animate: { opacity: 1, scale: 1.1, y: '0%' },
 };
 
+const tapThreshold = 300;
+let timer;
+
 function TodoListSectionItem({
   todo,
+  isShowingDetails,
   selectedTodo,
   onSelectTodo,
   onDeleteTodo,
+  onShowDetails,
 }) {
   const { gunUser } = useUser();
   const [isEditing, setIsEditing] = useState(false);
@@ -34,6 +39,17 @@ function TodoListSectionItem({
     },
     [onSelectTodo, selectedTodo, todo],
   );
+
+  // const toggleTimer = useCallback(() => {
+  //   console.log(timer);
+  //   if (timer) return clearTimeout(timer);
+  //   timer = setTimeout(() => onShowDetails(true), tapThreshold);
+  // }, [onShowDetails]);
+
+  const handleDoubleClick = useCallback(() => {
+    onSelectTodo(todo);
+    onShowDetails(true);
+  }, [onShowDetails, onSelectTodo, todo]);
 
   const handleEdit = useCallback(
     (todoEv) => {
@@ -74,18 +90,25 @@ function TodoListSectionItem({
         exit={{ opacity: 0 }}
       >
         <motion.div
-          layout
+          // layout
+          layoutId={`todo-container-${todo.id}`}
           className={`${styles.todo} ${
             todo.completed ? styles['todo--completed'] : ''
           } ${selectedTodo?.id === todo.id ? styles['todo--selected'] : ''}`}
           onClick={handleSelect}
-          animate={selectedTodo?.id === todo.id ? { scale: 1.1 } : {}}
+          // animate={selectedTodo?.id === todo.id ? { scale: 1.1 } : {}}
           whileTap={selectedTodo?.id !== todo.id ? { scale: 0.98 } : {}}
+          // onTapStart={() => toggleTimer()}
+          // onTapCancel={() => toggleTimer()}
+          // onTouchStart={() => toggleTimer()}
+          // onTouchEnd={() => toggleTimer()}
+          onDoubleClick={handleDoubleClick}
         >
           <motion.button
             className={`${styles.todo__button} ${
               todo.completed ? styles['todo__button--completed'] : ''
             }`}
+            layout
             onClick={toggleComplete}
             whileTap={{ scale: 0.97 }}
             transition={{ ease: 'anticipate' }}
@@ -94,12 +117,13 @@ function TodoListSectionItem({
             className={`${styles.todo__text} ${
               todo.completed ? styles['todo__text--completed'] : ''
             }`}
+            layoutId={`todo-text-${todo.id}`}
           >
             {todo.data}
           </motion.p>
         </motion.div>
         <AnimatePresence>
-          {selectedTodo?.id === todo.id && (
+          {selectedTodo?.id === todo.id && !isShowingDetails && (
             <motion.div
               className={styles.todo__actions}
               initial="initial"

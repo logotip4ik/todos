@@ -16,11 +16,8 @@ const getTime = () =>
   }).format(new Date());
 
 const xOffset = 14;
-const breakpoint = 100;
 
-function Clock() {
-  const { scrollY } = useViewportScroll();
-  const top = useTransform(scrollY, [0, breakpoint], [91, 14]);
+function Clock({ isShowingDetails }) {
   const [time, setTime] = useState(getTime());
 
   useEffect(() => setInterval(() => setTime(getTime()), 1000), []);
@@ -28,7 +25,8 @@ function Clock() {
   return (
     <motion.button
       className={styles.clock}
-      style={{ width: 81, height: 45, top }}
+      style={{ width: 81, height: 45 }}
+      animate={{ top: isShowingDetails ? 24 : 85 }}
     >
       <AnimatePresence>
         {time.split('').map((val, i) => {
