@@ -1,11 +1,6 @@
 import styles from '../../styles/Utils/Clock.module.scss';
 
-import {
-  AnimatePresence,
-  motion,
-  useTransform,
-  useViewportScroll,
-} from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
 
 const getTime = () =>

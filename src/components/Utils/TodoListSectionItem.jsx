@@ -10,9 +10,6 @@ const actionsVariants = {
   animate: { opacity: 1, scale: 1.1, y: '0%' },
 };
 
-const tapThreshold = 300;
-let timer;
-
 function TodoListSectionItem({
   todo,
   isShowingDetails,
