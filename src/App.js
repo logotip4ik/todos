@@ -22,6 +22,15 @@ function App() {
   const { gunUser, loginUser, createUser, isUserLoggedIn, isUserLoading } =
     useUser();
 
+  const handleBottomBarCreateClick = useCallback(() => {
+    const newState =
+      appState === constants.CREATING || isShowingDetails
+        ? constants.IDLE
+        : constants.CREATING;
+    setAppState(newState);
+    setIsShowingDetails(false);
+  }, [appState, isShowingDetails]);
+
   const handleCreate = useCallback(
     (todo) => {
       gunUser().get('todos').get(todo.id).put(todo);
@@ -83,10 +92,7 @@ function App() {
             />
             <BottomBar
               isCreating={appState === constants.CREATING || isShowingDetails}
-              onClickCreate={() => {
-                setAppState(constants.IDLE);
-                setIsShowingDetails(false);
-              }}
+              onClickCreate={handleBottomBarCreateClick}
             />
           </motion.div>
         )}
