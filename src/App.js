@@ -1,5 +1,6 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import { useCallback, useEffect, useState } from 'react';
+import { Toaster, ToastBar, toast } from 'react-hot-toast';
 import useUser from './hooks/useUser';
 import constants from './constants';
 
@@ -33,7 +34,10 @@ function App() {
 
   const handleCreate = useCallback(
     (todo) => {
-      gunUser().get('todos').get(todo.id).put(todo);
+      gunUser()
+        .get('todos')
+        .get(todo.id)
+        .put(todo, () => toast('Created new todo!', { icon: '✅' }));
       setAppState(constants.IDLE);
     },
     [gunUser],
@@ -98,12 +102,34 @@ function App() {
           </motion.div>
         )}
       </AnimatePresence>
-
       <Creating
         isOpened={appState === constants.CREATING}
         onCreate={(todo) => handleCreate(todo)}
         onClose={() => setAppState(constants.IDLE)}
       />
+
+      <Toaster
+        position="bottom-left"
+        containerStyle={{ bottom: '4.75rem' }}
+        toastOptions={{
+          style: {
+            background: '#333',
+            color: 'var(--ff-color)',
+          },
+        }}
+      >
+        {(t) => (
+          <ToastBar
+            toast={t}
+            style={{
+              ...t.style,
+              animation: t.visible
+                ? 'toast-enter 1s ease'
+                : 'toast-exit 1s ease',
+            }}
+          />
+        )}
+      </Toaster>
     </>
   );
 }

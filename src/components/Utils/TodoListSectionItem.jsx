@@ -1,6 +1,7 @@
 import styles from '../../styles/Utils/TodoListSectionItem.module.scss';
 
 import { useCallback, useState } from 'react';
+import { toast } from 'react-hot-toast';
 import { motion, AnimatePresence } from 'framer-motion';
 import useUser from '../../hooks/useUser';
 import Create from '../Pages/Create';
@@ -62,7 +63,10 @@ function TodoListSectionItem({
     (ev) => {
       ev.stopPropagation();
       onDeleteTodo(todo);
-      gunUser().get('todos').get(todo.id).put(null);
+      gunUser()
+        .get('todos')
+        .get(todo.id)
+        .put(null, () => toast('Deleted todo', { icon: '⚠' }));
     },
     [gunUser, todo, onDeleteTodo],
   );
