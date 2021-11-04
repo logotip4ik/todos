@@ -41,8 +41,8 @@ function App() {
 
   const handleDelete = useCallback(
     (todo) => {
-      const todos = Array.from(rawTodos);
-      setRawTodos(todos.filter(({ id }) => id !== todo.id));
+      const todos = Object.values(rawTodos).filter((val) => val.id !== todo.id);
+      setRawTodos(todos.reduce((acc, val) => ({ ...acc, [val.id]: val }), {}));
     },
     [rawTodos],
   );
