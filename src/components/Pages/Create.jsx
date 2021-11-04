@@ -40,6 +40,11 @@ function Create({
   const textareaRef = useRef(null);
   const [todoText, setTodoText] = useState(initialTodo.data || '');
 
+  const resize = useCallback((target) => {
+    target.style.height = 'auto';
+    target.style.height = target.scrollHeight + 'px';
+  }, []);
+
   const handleSubmit = useCallback(
     (ev) => {
       ev.preventDefault();
@@ -102,6 +107,7 @@ function Create({
               <textarea
                 ref={textareaRef}
                 value={todoText}
+                onInput={(ev) => resize(ev.target)}
                 onChange={({ target }) => setTodoText(target.value)}
                 className={formStyles.form__item__input}
               />
