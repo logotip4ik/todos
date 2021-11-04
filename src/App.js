@@ -11,7 +11,8 @@ import Header from './components/Utils/Header';
 import TodoList from './components/Utils/TodoList';
 import BottomBar from './components/Utils/BottomBar';
 
-import Creating from './components/Pages/Create';
+import CreatingPage from './components/Pages/Create';
+import SettingsPage from './components/Pages/Settings';
 
 const exit = { opacity: 0 };
 const anim = { opacity: 1 };
@@ -23,9 +24,18 @@ function App() {
   const { gunUser, loginUser, createUser, isUserLoggedIn, isUserLoading } =
     useUser();
 
+  const handleBottomBarSettingsClick = useCallback(() => {
+    const newState =
+      appState === constants.SETTINGS ? constants.IDLE : constants.SETTINGS;
+    setAppState(newState);
+    setIsShowingDetails(false);
+  }, [appState]);
+
   const handleBottomBarCreateClick = useCallback(() => {
     const newState =
-      appState === constants.CREATING || isShowingDetails
+      appState === constants.CREATING ||
+      appState === constants.SETTINGS ||
+      isShowingDetails
         ? constants.IDLE
         : constants.CREATING;
     setAppState(newState);
@@ -88,7 +98,11 @@ function App() {
         ) : (
           <motion.div initial={exit} animate={anim} exit={exit} key={3}>
             <Header />
-            <Clock isShowingDetails={isShowingDetails} />
+            <Clock
+              isShowingDetails={
+                isShowingDetails || appState === constants.SETTINGS
+              }
+            />
             <TodoList
               rawTodos={rawTodos}
               isShowingDetails={isShowingDetails}
@@ -96,15 +110,28 @@ function App() {
               onIsShowingDetails={(bool) => setIsShowingDetails(bool)}
             />
             <BottomBar
-              isCreating={appState === constants.CREATING || isShowingDetails}
+              isViewingSettings={appState === constants.SETTINGS}
+              isCreating={
+                appState === constants.CREATING ||
+                appState === constants.SETTINGS ||
+                isShowingDetails
+              }
+              onClickViewSettings={handleBottomBarSettingsClick}
               onClickCreate={handleBottomBarCreateClick}
             />
           </motion.div>
         )}
       </AnimatePresence>
-      <Creating
+
+      <CreatingPage
         isOpened={appState === constants.CREATING}
         onCreate={(todo) => handleCreate(todo)}
+        onClose={() => setAppState(constants.IDLE)}
+      />
+
+      <SettingsPage
+        isOpened={appState === constants.SETTINGS}
+        // onCreate={(todo) => handleCreate(todo)}
         onClose={() => setAppState(constants.IDLE)}
       />
 
