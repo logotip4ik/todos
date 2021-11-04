@@ -1,6 +1,7 @@
 .bottomBar {
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
+  align-items: center;
 
   position: fixed;
   left: 0;
@@ -8,37 +9,73 @@
   z-index: 99999;
 
   width: 100%;
-  height: 4rem;
 
+  padding: 0 2rem;
   background-color: #1a1a1a;
 
-  &__add {
-    --size: 5rem;
+  &__button {
+    --size: 3.5rem;
 
     display: inline-flex;
     justify-content: center;
     align-items: center;
 
     position: relative;
-    bottom: calc(50% + 0.5rem);
+    isolation: isolate;
 
     height: var(--size);
     width: var(--size);
 
-    background-color: var(--primary-color);
-    opacity: 0.75;
     outline: none;
     border: none;
     border-radius: 50%;
-    backdrop-filter: blur(1px);
+    background-color: transparent;
 
-    box-shadow: 0 1px 10px rgba($color: #000000, $alpha: 0.125);
+    cursor: pointer;
 
     svg {
-      height: 50%;
+      height: 60%;
       width: auto;
-      fill: var(--surface-color);
-      color: var(--surface-color);
+      fill: var(--ff-color);
+    }
+
+    &::after {
+      --base-transform: translate(-50%, -50%);
+      content: '';
+
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      z-index: -1;
+
+      width: 100%;
+      height: 100%;
+
+      border-radius: 50%;
+      background-color: #333;
+      transform: var(--base-transform) scale(0);
+
+      transition: transform 0.4s ease;
+    }
+
+    &--main {
+      --size: 5rem;
+
+      background-color: var(--primary-color);
+      opacity: 0.75;
+      backdrop-filter: blur(1px);
+
+      box-shadow: 0 1px 10px rgba($color: #000000, $alpha: 0.125);
+      transform: translateY(-50%);
+
+      svg {
+        height: 50%;
+        fill: var(--surface-color);
+      }
+    }
+    &--active::after {
+      transform: var(--base-transform) scale(1.1);
+      transition-timing-function: cubic-bezier(0.64, 0.57, 0.67, 1.53);
     }
   }
 }
