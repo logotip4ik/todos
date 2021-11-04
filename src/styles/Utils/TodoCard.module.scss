@@ -11,6 +11,7 @@
   left: calc(var(--pd) / 2);
 
   z-index: 9;
+  overflow: auto;
 
   width: calc(100vw - var(--pd));
   max-width: 900px;
