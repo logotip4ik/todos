@@ -61,6 +61,7 @@ function App() {
         if (!todo) return;
         setRawTodos((todos) => ({ ...todos, [todo.id]: todo }));
       });
+    // eslint-disable-next-line
   }, [isUserLoggedIn]);
 
   return (
