@@ -43,3 +43,27 @@ body {
     font-size: 14px;
   }
 }
+
+@keyframes toast-enter {
+  0% {
+    transform: translateY(450%);
+  }
+  50% {
+    transform: translateY(0%);
+  }
+  100% {
+    transform: translateY(0%);
+  }
+}
+
+@keyframes toast-exit {
+  0% {
+    transform: translateY(0%);
+  }
+  50% {
+    transform: translateY(450%);
+  }
+  100% {
+    transform: translateY(450%);
+  }
+}
