@@ -7,7 +7,7 @@ import Create from '../Pages/Create';
 
 const actionsVariants = {
   initial: { opacity: 0, scale: 1, y: '-100%' },
-  animate: { opacity: 1, scale: 1.1, y: '0%' },
+  animate: { opacity: 1, scale: 1.025, y: '0%' },
 };
 
 function TodoListSectionItem({
@@ -36,12 +36,6 @@ function TodoListSectionItem({
     },
     [onSelectTodo, selectedTodo, todo],
   );
-
-  // const toggleTimer = useCallback(() => {
-  //   console.log(timer);
-  //   if (timer) return clearTimeout(timer);
-  //   timer = setTimeout(() => onShowDetails(true), tapThreshold);
-  // }, [onShowDetails]);
 
   const handleDoubleClick = useCallback(() => {
     onSelectTodo(todo);
@@ -87,18 +81,12 @@ function TodoListSectionItem({
         exit={{ opacity: 0 }}
       >
         <motion.div
-          // layout
           layoutId={`todo-container-${todo.id}`}
           className={`${styles.todo} ${
             todo.completed ? styles['todo--completed'] : ''
           } ${selectedTodo?.id === todo.id ? styles['todo--selected'] : ''}`}
           onClick={handleSelect}
-          // animate={selectedTodo?.id === todo.id ? { scale: 1.1 } : {}}
           whileTap={selectedTodo?.id !== todo.id ? { scale: 0.98 } : {}}
-          // onTapStart={() => toggleTimer()}
-          // onTapCancel={() => toggleTimer()}
-          // onTouchStart={() => toggleTimer()}
-          // onTouchEnd={() => toggleTimer()}
           onDoubleClick={handleDoubleClick}
         >
           <motion.button
