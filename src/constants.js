@@ -3,6 +3,7 @@ const constants = {
   IDLE: 'idle',
   CREATING: 'creating',
   EDITING: 'editing',
+  SETTINGS: 'settings',
 };
 
 export default constants;
