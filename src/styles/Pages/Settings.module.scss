@@ -1,4 +1,36 @@
 @import '../Utils/TodoCard.module.scss';
 
 .card {
+  overflow-x: hidden;
+
+  &__item {
+    display: flex;
+    justify-content: flex-start;
+    align-items: stretch;
+    flex-direction: column;
+    gap: 1rem;
+
+    position: relative;
+
+    width: 100%;
+
+    margin-bottom: 2rem;
+
+    &__header {
+      font-size: 2rem;
+    }
+
+    &::after {
+      content: '';
+
+      position: absolute;
+      top: calc(100% + 0.75rem);
+      right: -1rem;
+
+      width: calc(100% + 1rem);
+      height: 2px;
+
+      background-color: #333;
+    }
+  }
 }
