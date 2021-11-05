@@ -21,6 +21,8 @@ function App() {
   const [appState, setAppState] = useState(constants.IDLE);
   const [rawTodos, setRawTodos] = useState({});
   const [isShowingDetails, setIsShowingDetails] = useState(false);
+  const [sortBy, setSortBy] = useState('createdAt');
+  const [sortingOrder, setSortingOrder] = useState('asc');
   const { gunUser, loginUser, createUser, isUserLoggedIn, isUserLoading } =
     useUser();
 
@@ -41,6 +43,16 @@ function App() {
     setAppState(newState);
     setIsShowingDetails(false);
   }, [appState, isShowingDetails]);
+
+  const handleSetSortBy = useCallback(
+    (value) => gunUser().get('sortBy').put(value),
+    [gunUser],
+  );
+
+  const handleSetSortingOrder = useCallback(
+    (value) => gunUser().get('sortingOrder').put(value),
+    [gunUser],
+  );
 
   const handleCreate = useCallback(
     (todo) => {
@@ -75,6 +87,14 @@ function App() {
         if (!todo) return;
         setRawTodos((todos) => ({ ...todos, [todo.id]: todo }));
       });
+
+    gunUser()
+      .get('sortBy')
+      .on((data) => setSortBy(data || 'createdAt'));
+
+    gunUser()
+      .get('sortingOrder')
+      .on((data) => setSortingOrder(data || 'asc'));
     // eslint-disable-next-line
   }, [isUserLoggedIn]);
 
@@ -105,6 +125,8 @@ function App() {
             />
             <TodoList
               rawTodos={rawTodos}
+              sortBy={sortBy}
+              sortingOrder={sortingOrder}
               isShowingDetails={isShowingDetails}
               onDeleteTodo={(todo) => handleDelete(todo)}
               onIsShowingDetails={(bool) => setIsShowingDetails(bool)}
@@ -131,7 +153,10 @@ function App() {
 
       <SettingsPage
         isOpened={appState === constants.SETTINGS}
-        // onCreate={(todo) => handleCreate(todo)}
+        sortBy={sortBy}
+        sortingOrder={sortingOrder}
+        onSortingOrder={handleSetSortingOrder}
+        onSortBy={handleSetSortBy}
         onClose={() => setAppState(constants.IDLE)}
       />
 

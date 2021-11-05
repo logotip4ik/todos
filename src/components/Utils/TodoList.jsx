@@ -9,6 +9,8 @@ const dateLength = 16;
 
 function TodoList({
   rawTodos,
+  sortBy,
+  sortingOrder,
   isShowingDetails,
   onDeleteTodo,
   onIsShowingDetails,
@@ -22,19 +24,21 @@ function TodoList({
     // [{ id: 1, data: "hello world, createdAt: "Sat, 31 Oct 2021"}] ->
     // { "Sat, 31 Oct 2021": [{ id: 1, data: "hello world", createdAt: "Sat, 31 Oct 2021"}] }
     return todosArray.reduce((acc, todo) => {
-      const createdAt = todo.createdAt.slice(0, dateLength);
+      const timestamp = todo[sortBy].slice(0, dateLength);
       return {
         ...acc,
-        [createdAt]: acc[createdAt] ? [...acc[createdAt], todo] : [todo],
+        [timestamp]: acc[timestamp] ? [...acc[timestamp], todo] : [todo],
       };
     }, {});
-  }, [rawTodos]);
+  }, [rawTodos, sortBy]);
 
   const todosDates = useMemo(() => {
     const dates = Object.keys(todos);
 
-    return dates.sort((a, b) => new Date(b) - new Date(a));
-  }, [todos]);
+    const sortedTodosDates = dates.sort((a, b) => new Date(b) - new Date(a));
+    if (sortingOrder === 'desc') return sortedTodosDates.reverse();
+    return sortedTodosDates;
+  }, [todos, sortingOrder]);
 
   return (
     <AnimateSharedLayout type="crossfade">
