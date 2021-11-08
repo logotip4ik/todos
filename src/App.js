@@ -137,7 +137,10 @@ function App() {
           </motion.div>
         ) : (
           <motion.div initial={exit} animate={anim} exit={exit} key={3}>
-            <Header />
+            <Header
+              filteringBy={filteringBy}
+              onFilteringBy={(filters) => setFilteringBy(filters)}
+            />
             <Clock
               isShowingDetails={
                 isShowingDetails || appState === constants.SETTINGS
