@@ -69,7 +69,7 @@ function TodoListSectionItem({
     [gunUser, todo, onDeleteTodo],
   );
 
-  // TODO idk, why but buttons is not under the card, try ti fix later
+  // TODO: when card is hawing more than 1 tag the layout of tags is breaking
   return (
     <>
       <motion.li
