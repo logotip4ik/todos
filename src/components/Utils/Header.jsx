@@ -14,10 +14,10 @@ function Header({ filteringBy, onFilteringBy }) {
   const [shouldWrap, setShouldWrap] = useState(false);
   const { scrollY } = useViewportScroll();
 
-  const paddingTop = useTransform(scrollY, [0, breakpoint], [73.5, 12]);
-  const basePadding = useTransform(scrollY, [0, breakpoint], [28, 12]);
+  const height = useTransform(scrollY, [0, breakpoint], [200, 66]);
+  const titleBottom = useTransform(scrollY, [0, breakpoint], [64, 17]);
+  const titleLeft = useTransform(scrollY, [0, breakpoint], [12, -24]);
   const baseScale = useTransform(scrollY, [0, breakpoint], [1, 0.5]);
-  const left = useTransform(scrollY, [0, breakpoint], [0, -0.5]);
 
   scrollY.onChange((val) => setShouldWrap(val > breakpoint / 2));
 
@@ -38,21 +38,15 @@ function Header({ filteringBy, onFilteringBy }) {
       layout
       className={styles.header}
       style={{
-        paddingTop,
-        paddingLeft: basePadding,
-        paddingRight: basePadding,
-        paddingBottom: basePadding,
-        flexDirection: shouldWrap ? 'row' : 'column',
+        height: height,
       }}
     >
       <motion.h1
-        layout
         className={styles.header__title}
         style={{
           scale: baseScale,
-          transform: `translate3d(${left.get()}px, 0px, 0px)`,
-          lineHeight: baseScale,
-          transformOrigin: 'left bottom',
+          bottom: titleBottom,
+          left: titleLeft,
         }}
       >
         Todo
@@ -61,8 +55,8 @@ function Header({ filteringBy, onFilteringBy }) {
         {filteringBy.length > 0 && (
           <motion.ul
             initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, width: shouldWrap ? '75%' : '100%' }}
+            exit={{ opacity: 0 }}
             transition={{ staggerChildren: 0.3 }}
             layout
             className={styles.header__tags}
@@ -72,11 +66,11 @@ function Header({ filteringBy, onFilteringBy }) {
                 layout
                 key={`${filter}-${i}`}
                 className={styles.header__tags__tag}
-                whileTap={{ scale: 0.98 }}
+                whileTap={{ scale: 0.95 }}
                 onClick={() => handleSetFilters(filter)}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                exit={{ position: 'absolute' }}
+                exit={{ opacity: 0 }}
               >
                 {filter}
               </motion.li>
