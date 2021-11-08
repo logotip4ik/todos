@@ -1,8 +1,7 @@
 .header {
   display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
+  justify-content: flex-end;
+  align-items: center;
   gap: 0.5rem;
 
   position: sticky;
@@ -10,13 +9,18 @@
   top: 0;
   left: 0;
 
-  padding: 5.25rem 1.5rem 1.5rem;
+  padding: 1.25rem 1.5rem;
   border-bottom: 2px solid #c4c4c4;
   background-color: var(--surface-color);
 
   &__title {
+    position: absolute;
+    bottom: 2.5rem;
+    left: 1.5rem;
+
     font-size: 5rem;
     font-weight: 700;
+    line-height: 30px;
   }
 
   &__tags {
