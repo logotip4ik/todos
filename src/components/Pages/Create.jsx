@@ -64,6 +64,9 @@ const pageVariants = {
   },
 };
 
+const makeTags = (tags) =>
+  tags.reduce((acc, tag) => [...acc, { label: tag, value: tag }], []);
+
 function Create({
   tags,
   isOpened,
@@ -80,7 +83,7 @@ function Create({
 
   const normalizedTags = useMemo(() => {
     if (!tags) return [];
-    return tags.reduce((acc, tag) => [...acc, { label: tag, value: tag }], []);
+    return makeTags(tags);
   }, [tags]);
 
   const resize = useCallback((target) => {
@@ -131,6 +134,12 @@ function Create({
     },
     [onClose],
   );
+
+  useEffect(() => {
+    if (!initialTodo.data) return;
+    setTodoText(initialTodo.data);
+    setTodoTags(makeTags(initialTodo.tags));
+  }, [initialTodo]);
 
   useEffect(() => {
     if (!isOpened) return;

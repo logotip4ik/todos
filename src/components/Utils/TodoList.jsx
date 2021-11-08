@@ -8,17 +8,20 @@ import TodoCard from './TodoCard';
 const dateLength = 16;
 
 function TodoList({
+  appState,
+  selectedTodo,
   rawTodos,
+  tags,
   filteringBy,
   sortBy,
   sortingOrder,
   isShowingDetails,
+  onSetSelectedTodo,
+  onSetAppState,
   onDeleteTodo,
   onFilteringBy,
   onIsShowingDetails,
 }) {
-  const [selectedTodo, setSelectedTodo] = useState(null);
-
   const todos = useMemo(() => {
     let todosArray = Object.values(rawTodos);
     if (filteringBy.length > 0) {
@@ -53,12 +56,15 @@ function TodoList({
         {todosDates.map((date) => (
           <TodoListSection
             key={date}
+            appState={appState}
+            tags={tags}
             date={date}
             todos={todos[date]}
             filteringBy={filteringBy}
             selectedTodo={selectedTodo}
             isShowingDetails={isShowingDetails}
-            onSelectTodo={(todo) => setSelectedTodo(todo)}
+            onSetAppState={(state) => onSetAppState(state)}
+            onSelectTodo={(todo) => onSetSelectedTodo(todo)}
             onDeleteTodo={(todo) => onDeleteTodo(todo)}
             onFilteringBy={(filters) => onFilteringBy(filters)}
             onShowDetails={(ev) => onIsShowingDetails(ev)}

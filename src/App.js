@@ -19,6 +19,7 @@ const anim = { opacity: 1 };
 
 function App() {
   const [appState, setAppState] = useState(constants.IDLE);
+  const [selectedTodo, setSelectedTodo] = useState(null);
   const [rawTodos, setRawTodos] = useState({});
   const tags = useMemo(() => {
     const todos = Object.values(rawTodos);
@@ -48,6 +49,7 @@ function App() {
     const newState =
       appState === constants.CREATING ||
       appState === constants.SETTINGS ||
+      appState === constants.EDITING ||
       isShowingDetails
         ? constants.IDLE
         : constants.CREATING;
@@ -74,6 +76,28 @@ function App() {
         .once(() => toast('Created new todo!', { icon: '✅' }));
 
       setAppState(constants.IDLE);
+    },
+    [gunUser],
+  );
+
+  const handleEdit = useCallback(
+    (todo) => {
+      gunUser()
+        .get('todos')
+        .get(todo.id)
+        .get('data')
+        .put(todo.data)
+        .back()
+        .get('tags')
+        .put(todo.tags)
+        .back()
+        .get('updatedAt')
+        .put(todo.updatedAt)
+        .back()
+        .once(() => {
+          toast('Updated todo!', { icon: '📦' });
+          setAppState(constants.IDLE);
+        });
     },
     [gunUser],
   );
@@ -147,11 +171,16 @@ function App() {
               }
             />
             <TodoList
+              appState={appState}
+              tags={tags}
               rawTodos={rawTodos}
               filteringBy={filteringBy}
               sortBy={sortBy}
+              selectedTodo={selectedTodo}
               sortingOrder={sortingOrder}
               isShowingDetails={isShowingDetails}
+              onSetSelectedTodo={(todo) => setSelectedTodo(todo)}
+              onSetAppState={(state) => setAppState(state)}
               onDeleteTodo={(todo) => handleDelete(todo)}
               onFilteringBy={(filters) => setFilteringBy(filters)}
               onIsShowingDetails={(bool) => setIsShowingDetails(bool)}
@@ -161,6 +190,7 @@ function App() {
               isCreating={
                 appState === constants.CREATING ||
                 appState === constants.SETTINGS ||
+                appState === constants.EDITING ||
                 isShowingDetails
               }
               onClickViewSettings={handleBottomBarSettingsClick}
@@ -172,8 +202,14 @@ function App() {
 
       <CreatingPage
         tags={tags}
-        isOpened={appState === constants.CREATING}
-        onCreate={(todo) => handleCreate(todo)}
+        submitButtonText={appState === constants.EDITING ? 'Update' : 'Add'}
+        initialTodo={appState === constants.EDITING ? selectedTodo : {}}
+        isOpened={
+          appState === constants.CREATING || appState === constants.EDITING
+        }
+        onCreate={(todo) =>
+          constants.EDITING ? handleEdit(todo) : handleCreate(todo)
+        }
         onClose={() => setAppState(constants.IDLE)}
       />
 

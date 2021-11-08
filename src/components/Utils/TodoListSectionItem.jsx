@@ -3,6 +3,8 @@ import styles from '../../styles/Utils/TodoListSectionItem.module.scss';
 import { useCallback, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { motion, AnimatePresence } from 'framer-motion';
+import constants from '../../constants';
+
 import useUser from '../../hooks/useUser';
 import Create from '../Pages/Create';
 
@@ -13,12 +15,14 @@ const actionsVariants = {
 
 function TodoListSectionItem({
   todo,
+  tags,
   filteringBy,
   isShowingDetails,
   selectedTodo,
   onSelectTodo,
   onDeleteTodo,
   onFilteringBy,
+  onSetAppState,
   onShowDetails,
 }) {
   const { gunUser } = useUser();
@@ -50,21 +54,10 @@ function TodoListSectionItem({
     onShowDetails(true);
   }, [onShowDetails, onSelectTodo, todo]);
 
-  const handleEdit = useCallback(
-    (todoEv) => {
-      gunUser()
-        .get('todos')
-        .get(todoEv.id)
-        .get('data')
-        .put(todoEv.data)
-        .back()
-        .get('updatedAt')
-        .put(todoEv.updatedAt);
-
-      setIsEditing(false);
-    },
-    [gunUser],
-  );
+  const handleEdit = useCallback(() => {
+    onSelectTodo(todo);
+    onSetAppState(constants.EDITING);
+  }, [onSelectTodo, onSetAppState, todo]);
 
   const handleDelete = useCallback(
     (ev) => {
@@ -119,11 +112,15 @@ function TodoListSectionItem({
           </motion.p>
           {todo.tags.length > 0 && (
             <motion.ul
+              layout
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
               className={styles.todo__tags}
               layoutId={`todo-tags-${todo.id}`}
             >
               {todo.tags.map((tag, i) => (
                 <motion.li
+                  layout
                   className={styles.todo__tags__tag}
                   key={`${todo.id}-${i}`}
                   layoutId={`todo-tag-${todo.id}`}
@@ -147,7 +144,7 @@ function TodoListSectionItem({
               animate="animate"
               exit="initial"
               variants={actionsVariants}
-              onClick={() => setIsEditing((bool) => !bool)}
+              onClick={handleEdit}
             >
               <motion.button layout className={styles.todo__actions__button}>
                 Edit
@@ -163,13 +160,6 @@ function TodoListSectionItem({
           )}
         </AnimatePresence>
       </motion.li>
-      <Create
-        isOpened={isEditing}
-        initialTodo={todo}
-        onCreate={handleEdit}
-        submitButtonText="Update"
-        onClose={() => setIsEditing(false)}
-      />
     </>
   );
 }

@@ -34,7 +34,9 @@ const headerTextVariants = {
 };
 
 function TodoListSection({
+  appState,
   date,
+  tags,
   todos,
   filteringBy,
   isShowingDetails,
@@ -43,6 +45,7 @@ function TodoListSection({
   onDeleteTodo,
   onFilteringBy,
   onShowDetails,
+  onSetAppState,
 }) {
   const [isShowingTimeAgo, setIsShowingTimeAgo] = useState(true);
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -111,12 +114,15 @@ function TodoListSection({
             <TodoListSectionItem
               key={todo.id}
               todo={todo}
+              appState={appState}
+              tags={tags}
               filteringBy={filteringBy}
               selectedTodo={selectedTodo}
               isShowingDetails={isShowingDetails}
               onSelectTodo={(todoEv) => onSelectTodo(todoEv)}
               onDeleteTodo={(todoEv) => onDeleteTodo(todoEv)}
               onShowDetails={(ev) => onShowDetails(ev)}
+              onSetAppState={(state) => onSetAppState(state)}
               onFilteringBy={(filters) => onFilteringBy(filters)}
             />
           ))}
