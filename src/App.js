@@ -69,6 +69,7 @@ function App() {
 
   const handleCreate = useCallback(
     (todo) => {
+      console.log('CREATING WITH: ', todo);
       gunUser()
         .get('todos')
         .get(todo.id)
@@ -208,7 +209,7 @@ function App() {
           appState === constants.CREATING || appState === constants.EDITING
         }
         onCreate={(todo) =>
-          constants.EDITING ? handleEdit(todo) : handleCreate(todo)
+          appState === constants.EDITING ? handleEdit(todo) : handleCreate(todo)
         }
         onClose={() => setAppState(constants.IDLE)}
       />
