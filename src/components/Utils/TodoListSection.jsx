@@ -33,6 +33,8 @@ const headerTextVariants = {
   animate: { opacity: 1 },
 };
 
+let rotated = 0;
+
 function TodoListSection({
   appState,
   date,
@@ -87,8 +89,11 @@ function TodoListSection({
         </AnimatePresence>
         <motion.button
           className={styles.section__header__button}
-          onClick={() => setIsCollapsed((bool) => !bool)}
-          animate={{ rotate: isCollapsed ? 180 : 0 }}
+          onClick={() => {
+            setIsCollapsed((bool) => !bool);
+            rotated += 180;
+          }}
+          animate={{ rotate: rotated }}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"

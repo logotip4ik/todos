@@ -122,6 +122,7 @@ function Create({
 
       onCreate(newTodo);
       setTodoText('');
+      setTodoTags([]);
     },
     [initialTodo, todoTags, todoText, onCreate],
   );
