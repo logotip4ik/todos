@@ -1,12 +1,11 @@
 import styles from '../../styles/Utils/TodoListSectionItem.module.scss';
 
-import { useCallback, useState } from 'react';
+import { useCallback } from 'react';
 import { toast } from 'react-hot-toast';
 import { motion, AnimatePresence } from 'framer-motion';
 import constants from '../../constants';
 
 import useUser from '../../hooks/useUser';
-import Create from '../Pages/Create';
 
 const actionsVariants = {
   initial: { opacity: 0, scale: 1, y: '-130%' },
@@ -26,7 +25,6 @@ function TodoListSectionItem({
   onShowDetails,
 }) {
   const { gunUser } = useUser();
-  const [isEditing, setIsEditing] = useState(false);
 
   const toggleComplete = useCallback(
     (ev) => {

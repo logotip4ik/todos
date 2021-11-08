@@ -1,6 +1,6 @@
 import styles from '../../styles/Utils/TodoList.module.scss';
 
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { motion, AnimateSharedLayout, AnimatePresence } from 'framer-motion';
 import TodoListSection from './TodoListSection';
 import TodoCard from './TodoCard';
