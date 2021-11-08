@@ -33,6 +33,7 @@ function App() {
   const [isShowingDetails, setIsShowingDetails] = useState(false);
   const [sortBy, setSortBy] = useState('createdAt');
   const [sortingOrder, setSortingOrder] = useState('asc');
+  const [filteringBy, setFilteringBy] = useState([]);
   const { gunUser, loginUser, createUser, isUserLoggedIn, isUserLoading } =
     useUser();
 
@@ -100,14 +101,7 @@ function App() {
         setRawTodos((todos) => {
           const todoToPut = {
             ...todo,
-            tags: todo.tags
-              ? todo.tags
-                  .split(',')
-                  .reduce(
-                    (acc, text) => [...acc, { label: text, value: text }],
-                    [],
-                  )
-              : [],
+            tags: todo.tags ? todo.tags.split(',') : [],
           };
 
           return { ...todos, [todoToPut.id]: todoToPut };
@@ -151,10 +145,12 @@ function App() {
             />
             <TodoList
               rawTodos={rawTodos}
+              filteringBy={filteringBy}
               sortBy={sortBy}
               sortingOrder={sortingOrder}
               isShowingDetails={isShowingDetails}
               onDeleteTodo={(todo) => handleDelete(todo)}
+              onFilteringBy={(filters) => setFilteringBy(filters)}
               onIsShowingDetails={(bool) => setIsShowingDetails(bool)}
             />
             <BottomBar

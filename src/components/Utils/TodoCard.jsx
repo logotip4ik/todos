@@ -17,13 +17,13 @@ function TodoCard({ todo, onDeselectTodo }) {
           layoutId={`todo-tags-${todo.id}`}
           className={styles.card__tags}
         >
-          {todo.tags.map(({ label }, i) => (
+          {todo.tags.map((tag, i) => (
             <motion.li
               layoutId={`todo-tag-${todo.id}`}
               key={`${todo.id}-${i}`}
               className={styles.card__tags__tag}
             >
-              {label}
+              {tag}
             </motion.li>
           ))}
         </motion.ul>

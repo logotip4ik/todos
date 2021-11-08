@@ -13,10 +13,12 @@ const actionsVariants = {
 
 function TodoListSectionItem({
   todo,
+  filteringBy,
   isShowingDetails,
   selectedTodo,
   onSelectTodo,
   onDeleteTodo,
+  onFilteringBy,
   onShowDetails,
 }) {
   const { gunUser } = useUser();
@@ -28,6 +30,11 @@ function TodoListSectionItem({
       gunUser().get('todos').get(todo.id).get('completed').put(!todo.completed);
     },
     [todo, gunUser],
+  );
+
+  const handleSetFilter = useCallback(
+    (filter) => onFilteringBy([filter]),
+    [onFilteringBy],
   );
 
   const handleSelect = useCallback(
@@ -120,8 +127,13 @@ function TodoListSectionItem({
                   className={styles.todo__tags__tag}
                   key={`${todo.id}-${i}`}
                   layoutId={`todo-tag-${todo.id}`}
+                  onClick={(ev) => {
+                    ev.stopPropagation();
+                    handleSetFilter(tag);
+                  }}
+                  whileTap={{ scale: 0.98 }}
                 >
-                  {tag.label}
+                  {tag}
                 </motion.li>
               ))}
             </motion.ul>

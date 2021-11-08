@@ -36,10 +36,12 @@ const headerTextVariants = {
 function TodoListSection({
   date,
   todos,
+  filteringBy,
   isShowingDetails,
   selectedTodo,
   onSelectTodo,
   onDeleteTodo,
+  onFilteringBy,
   onShowDetails,
 }) {
   const [isShowingTimeAgo, setIsShowingTimeAgo] = useState(true);
@@ -109,11 +111,13 @@ function TodoListSection({
             <TodoListSectionItem
               key={todo.id}
               todo={todo}
+              filteringBy={filteringBy}
               selectedTodo={selectedTodo}
               isShowingDetails={isShowingDetails}
               onSelectTodo={(todoEv) => onSelectTodo(todoEv)}
               onDeleteTodo={(todoEv) => onDeleteTodo(todoEv)}
               onShowDetails={(ev) => onShowDetails(ev)}
+              onFilteringBy={(filters) => onFilteringBy(filters)}
             />
           ))}
       </motion.ul>

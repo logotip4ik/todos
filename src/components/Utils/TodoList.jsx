@@ -9,16 +9,23 @@ const dateLength = 16;
 
 function TodoList({
   rawTodos,
+  filteringBy,
   sortBy,
   sortingOrder,
   isShowingDetails,
   onDeleteTodo,
+  onFilteringBy,
   onIsShowingDetails,
 }) {
   const [selectedTodo, setSelectedTodo] = useState(null);
 
   const todos = useMemo(() => {
-    const todosArray = Object.values(rawTodos);
+    let todosArray = Object.values(rawTodos);
+    if (filteringBy.length > 0) {
+      todosArray = todosArray.filter((todo) =>
+        todo.tags.includes(filteringBy[0]),
+      );
+    }
 
     // this function is structuring date in a proper way
     // [{ id: 1, data: "hello world, createdAt: "Sat, 31 Oct 2021"}] ->
@@ -30,7 +37,7 @@ function TodoList({
         [timestamp]: acc[timestamp] ? [...acc[timestamp], todo] : [todo],
       };
     }, {});
-  }, [rawTodos, sortBy]);
+  }, [rawTodos, filteringBy, sortBy]);
 
   const todosDates = useMemo(() => {
     const dates = Object.keys(todos);
@@ -48,10 +55,12 @@ function TodoList({
             key={date}
             date={date}
             todos={todos[date]}
+            filteringBy={filteringBy}
             selectedTodo={selectedTodo}
             isShowingDetails={isShowingDetails}
             onSelectTodo={(todo) => setSelectedTodo(todo)}
             onDeleteTodo={(todo) => onDeleteTodo(todo)}
+            onFilteringBy={(filters) => onFilteringBy(filters)}
             onShowDetails={(ev) => onIsShowingDetails(ev)}
           />
         ))}

@@ -1,7 +1,7 @@
 import pageStyles from '../../styles/Pages/Create.module.scss';
 import formStyles from '../../styles/Form/Main.module.scss';
 import CreatableSelect from 'react-select/creatable';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { nanoid } from 'nanoid';
 import { AnimatePresence, motion } from 'framer-motion';
 
@@ -75,7 +75,13 @@ function Create({
 }) {
   const textareaRef = useRef(null);
   const [todoText, setTodoText] = useState(initialTodo.data || '');
+  // ! this will broke when updating todos, should be [{label: 'test', value: 'test'}], actually is ['test']
   const [todoTags, setTodoTags] = useState(initialTodo?.tags || []);
+
+  const normalizedTags = useMemo(() => {
+    if (!tags) return [];
+    return tags.reduce((acc, tag) => [...acc, { label: tag, value: tag }], []);
+  }, [tags]);
 
   const resize = useCallback((target) => {
     target.style.height = 'auto';
@@ -171,7 +177,7 @@ function Create({
                 styles={selectStyles}
                 isMulti
                 value={todoTags}
-                options={tags}
+                options={normalizedTags}
                 onChange={handleTodoTagsChange}
               />
             </div>
