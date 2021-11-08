@@ -12,6 +12,22 @@ function TodoCard({ todo, onDeselectTodo }) {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
     >
+      {todo.tags.length > 0 && (
+        <motion.ul
+          layoutId={`todo-tags-${todo.id}`}
+          className={styles.card__tags}
+        >
+          {todo.tags.map(({ label }, i) => (
+            <motion.li
+              layoutId={`todo-tag-${todo.id}`}
+              key={`${todo.id}-${i}`}
+              className={styles.card__tags__tag}
+            >
+              {label}
+            </motion.li>
+          ))}
+        </motion.ul>
+      )}
       <motion.p layoutId={`todo-text-${todo.id}`} className={styles.card__text}>
         {todo.data}
       </motion.p>

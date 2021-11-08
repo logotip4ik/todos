@@ -7,7 +7,7 @@ import useUser from '../../hooks/useUser';
 import Create from '../Pages/Create';
 
 const actionsVariants = {
-  initial: { opacity: 0, scale: 1, y: '-100%' },
+  initial: { opacity: 0, scale: 1, y: '-130%' },
   animate: { opacity: 1, scale: 1.025, y: '0%' },
 };
 
@@ -110,6 +110,22 @@ function TodoListSectionItem({
           >
             {todo.data}
           </motion.p>
+          {todo.tags.length > 0 && (
+            <motion.ul
+              className={styles.todo__tags}
+              layoutId={`todo-tags-${todo.id}`}
+            >
+              {todo.tags.map((tag, i) => (
+                <motion.li
+                  className={styles.todo__tags__tag}
+                  key={`${todo.id}-${i}`}
+                  layoutId={`todo-tag-${todo.id}`}
+                >
+                  {tag.label}
+                </motion.li>
+              ))}
+            </motion.ul>
+          )}
         </motion.div>
         <AnimatePresence>
           {selectedTodo?.id === todo.id && !isShowingDetails && (

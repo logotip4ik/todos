@@ -34,4 +34,22 @@
   &__text {
     font-size: 2rem;
   }
+
+  &__tags {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+
+    width: 100%;
+
+    margin-bottom: 1rem;
+    padding: 0 0.5rem;
+    list-style-type: none;
+
+    &__tag {
+      padding: 0.25rem 0.5rem;
+      border-radius: 0.25rem;
+      background-color: #232323;
+    }
+  }
 }
