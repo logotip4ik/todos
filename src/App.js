@@ -69,7 +69,6 @@ function App() {
 
   const handleCreate = useCallback(
     (todo) => {
-      console.log('CREATING WITH: ', todo);
       gunUser()
         .get('todos')
         .get(todo.id)
