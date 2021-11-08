@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from 'framer-motion';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState, useMemo } from 'react';
 import { Toaster, ToastBar, toast } from 'react-hot-toast';
 import useUser from './hooks/useUser';
 import constants from './constants';
@@ -20,6 +20,16 @@ const anim = { opacity: 1 };
 function App() {
   const [appState, setAppState] = useState(constants.IDLE);
   const [rawTodos, setRawTodos] = useState({});
+  const tags = useMemo(() => {
+    const todos = Object.values(rawTodos);
+    const rawTags = new Set();
+
+    for (const todo of todos)
+      if (Array.isArray(todo.tags) && todo.tags.length > 0)
+        rawTags.add(...todo.tags);
+
+    return Array.from(rawTags);
+  }, [rawTodos]);
   const [isShowingDetails, setIsShowingDetails] = useState(false);
   const [sortBy, setSortBy] = useState('createdAt');
   const [sortingOrder, setSortingOrder] = useState('asc');
@@ -59,7 +69,9 @@ function App() {
       gunUser()
         .get('todos')
         .get(todo.id)
-        .put(todo, () => toast('Created new todo!', { icon: '✅' }));
+        .put(todo)
+        .once(() => toast('Created new todo!', { icon: '✅' }));
+
       setAppState(constants.IDLE);
     },
     [gunUser],
@@ -85,7 +97,21 @@ function App() {
       .map()
       .on((todo) => {
         if (!todo) return;
-        setRawTodos((todos) => ({ ...todos, [todo.id]: todo }));
+        setRawTodos((todos) => {
+          const todoToPut = {
+            ...todo,
+            tags: todo.tags
+              ? todo.tags
+                  .split(',')
+                  .reduce(
+                    (acc, text) => [...acc, { label: text, value: text }],
+                    [],
+                  )
+              : [],
+          };
+
+          return { ...todos, [todoToPut.id]: todoToPut };
+        });
       });
 
     gunUser()
@@ -146,6 +172,7 @@ function App() {
       </AnimatePresence>
 
       <CreatingPage
+        tags={tags}
         isOpened={appState === constants.CREATING}
         onCreate={(todo) => handleCreate(todo)}
         onClose={() => setAppState(constants.IDLE)}
@@ -162,7 +189,7 @@ function App() {
 
       <Toaster
         position="bottom-left"
-        containerStyle={{ bottom: '4.75rem' }}
+        containerStyle={{ bottom: '6rem' }}
         toastOptions={{
           style: {
             background: '#333',

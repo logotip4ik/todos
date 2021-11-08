@@ -1,10 +1,45 @@
 import pageStyles from '../../styles/Pages/Create.module.scss';
 import formStyles from '../../styles/Form/Main.module.scss';
+import CreatableSelect from 'react-select/creatable';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { nanoid } from 'nanoid';
 import { AnimatePresence, motion } from 'framer-motion';
 
 import Label from '../Form/Label';
+
+const selectStyles = {
+  menu: (provided) => ({
+    ...provided,
+    color: 'white',
+    backgroundColor: '#333',
+  }),
+
+  option: (provided, state) => ({
+    ...provided,
+    color: 'white',
+    backgroundColor: state.isSelected ? '#454545' : '#333',
+  }),
+
+  singleValue: (provided) => ({
+    ...provided,
+    color: 'white',
+  }),
+
+  input: (provided) => ({
+    ...provided,
+    color: 'white',
+  }),
+
+  control: (provided) => ({
+    ...provided,
+    color: 'white',
+    backgroundColor: '#333',
+    borderColor: '#444',
+    boxShadow: '',
+    ':hover': { borderColor: '#888' },
+    ':focus-within': { borderColor: '#888' },
+  }),
+};
 
 const pageVariants = {
   initial: {
@@ -30,6 +65,7 @@ const pageVariants = {
 };
 
 function Create({
+  tags,
   isOpened,
   initialTodo = {},
   submitButtonText = 'Add',
@@ -39,10 +75,20 @@ function Create({
 }) {
   const textareaRef = useRef(null);
   const [todoText, setTodoText] = useState(initialTodo.data || '');
+  const [todoTags, setTodoTags] = useState(initialTodo?.tags || []);
 
   const resize = useCallback((target) => {
     target.style.height = 'auto';
     target.style.height = target.scrollHeight + 'px';
+  }, []);
+
+  const handleTodoTagsChange = useCallback((val) => {
+    if (!val) setTodoTags([]);
+    const newTags = val.reduce(
+      (acc, { label, value }) => [...acc, { label, value }],
+      [],
+    );
+    setTodoTags(newTags);
   }, []);
 
   const handleSubmit = useCallback(
@@ -60,12 +106,15 @@ function Create({
         ...initialTodo,
         updatedAt: new Date().toUTCString(),
         data,
+        tags: todoTags
+          .reduce((acc, { label }) => [...acc, label], [])
+          .join(','),
       };
 
       onCreate(newTodo);
       setTodoText('');
     },
-    [initialTodo, todoText, onCreate],
+    [initialTodo, todoTags, todoText, onCreate],
   );
 
   const handleReset = useCallback(
@@ -105,11 +154,25 @@ function Create({
                 Text
               </Label>
               <textarea
+                id={'data'}
                 ref={textareaRef}
                 value={todoText}
                 onInput={(ev) => resize(ev.target)}
                 onChange={({ target }) => setTodoText(target.value)}
                 className={formStyles.form__item__input}
+              />
+            </div>
+            <div className={formStyles.form__item}>
+              <Label htmlFor="tags" className={formStyles.form__item__label}>
+                Tags
+              </Label>
+              <CreatableSelect
+                id={'tags'}
+                styles={selectStyles}
+                isMulti
+                value={todoTags}
+                options={tags}
+                onChange={handleTodoTagsChange}
               />
             </div>
             <div
