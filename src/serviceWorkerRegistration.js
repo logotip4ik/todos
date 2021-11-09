@@ -1,3 +1,5 @@
+import { toast } from 'react-hot-toast';
+
 // This optional code is used to register a service worker.
 // register() is not called by default.
 
@@ -58,6 +60,12 @@ function registerValidSW(swUrl, config) {
   navigator.serviceWorker
     .register(swUrl)
     .then((registration) => {
+      registration.update();
+
+      setInterval(() => {
+        registration.update();
+      }, 1000 * (60 * 5));
+
       registration.onupdatefound = () => {
         const installingWorker = registration.installing;
         if (installingWorker == null) {
@@ -72,6 +80,18 @@ function registerValidSW(swUrl, config) {
               console.log(
                 'New content is available and will be used when all ' +
                   'tabs for this page are closed. See https://cra.link/PWA.',
+              );
+
+              toast(
+                `Update available! To update, close all windows and reopen.`,
+                {
+                  icon: '🎁',
+                  style: { bottom: '5rem' },
+                  position: 'bottom-left',
+                  toastId: 'appUpdateAvailable', // Prevent duplicate toasts
+                  onClick: () => window.close(), // Closes windows on click
+                  autoClose: false, // Prevents toast from auto closing
+                },
               );
 
               // Execute callback
