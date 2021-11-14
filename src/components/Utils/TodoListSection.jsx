@@ -1,37 +1,8 @@
 import styles from '../../styles/Utils/TodoListSection.module.scss';
 
 import { motion, AnimatePresence } from 'framer-motion';
-import { useCallback, useState } from 'react';
-import { format, register } from 'timeago.js';
+import { useState } from 'react';
 import TodoListSectionItem from './TodoListSectionItem';
-
-const timeagoLocale = (number, index, totalSec) => {
-  // number: the time ago / time in number;
-  // index: the index of array below;
-  // totalSec: total seconds between date to be formatted and today's date;
-  return [
-    ['Today'],
-    ['Today'],
-    ['Today'],
-    ['Today'],
-    ['Today'],
-    ['Today'],
-    ['Yesterday'],
-    ['%s days ago'],
-    ['1 week ago'],
-    ['%s weeks ago'],
-    ['1 month ago'],
-    ['%s months ago'],
-    ['1 year ago'],
-    ['%s years ago'],
-  ][index];
-};
-register('simple_Locale', timeagoLocale);
-
-const headerTextVariants = {
-  initial: { opacity: 0 },
-  animate: { opacity: 1 },
-};
 
 let rotated = 0;
 

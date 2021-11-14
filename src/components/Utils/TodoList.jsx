@@ -2,11 +2,32 @@ import styles from '../../styles/Utils/TodoList.module.scss';
 
 import { useMemo } from 'react';
 import { motion, AnimateSharedLayout, AnimatePresence } from 'framer-motion';
-import { format } from 'timeago.js';
+import { format, register } from 'timeago.js';
 import TodoListSection from './TodoListSection';
 import TodoCard from './TodoCard';
 
-const dateLength = 16;
+const timeagoLocale = (number, index, totalSec) => {
+  // number: the time ago / time in number;
+  // index: the index of array below;
+  // totalSec: total seconds between date to be formatted and today's date;
+  return [
+    ['Today'],
+    ['Today'],
+    ['Today'],
+    ['Today'],
+    ['Today'],
+    ['Today'],
+    ['Yesterday'],
+    ['%s days ago'],
+    ['1 week ago'],
+    ['%s weeks ago'],
+    ['1 month ago'],
+    ['%s months ago'],
+    ['1 year ago'],
+    ['%s years ago'],
+  ][index];
+};
+register('simple_Locale', timeagoLocale);
 
 const getSummaryDate = (values, key) => {
   let dateTime = 0;
@@ -17,6 +38,8 @@ const getSummaryDate = (values, key) => {
 
   return new Date(dateTime / values.length);
 };
+
+const dateLength = 16;
 
 function TodoList({
   appState,
