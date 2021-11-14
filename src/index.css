@@ -35,6 +35,7 @@ body {
 
 #root {
   height: 100%;
+  padding-top: 14.5rem;
 }
 
 @media screen and (max-width: 600px) {
