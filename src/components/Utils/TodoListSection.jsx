@@ -49,43 +49,15 @@ function TodoListSection({
   onShowDetails,
   onSetAppState,
 }) {
-  const [isShowingTimeAgo, setIsShowingTimeAgo] = useState(true);
   const [isCollapsed, setIsCollapsed] = useState(false);
-
-  const toggleShowingTimeAgo = useCallback(() => {
-    onSelectTodo(null);
-    setIsShowingTimeAgo((bool) => !bool);
-  }, [onSelectTodo]);
 
   return (
     <motion.li layout className={styles.section}>
       <motion.div layout className={styles.section__header}>
         <AnimatePresence exitBeforeEnter>
-          {isShowingTimeAgo ? (
-            <motion.h2
-              initial="initial"
-              animate="animate"
-              exit="initial"
-              variants={headerTextVariants}
-              className={styles.section__header__title}
-              key="1"
-              onClick={toggleShowingTimeAgo}
-            >
-              {format(date, 'simple_Locale')}
-            </motion.h2>
-          ) : (
-            <motion.h2
-              initial="initial"
-              animate="animate"
-              exit="initial"
-              variants={headerTextVariants}
-              className={styles.section__header__title}
-              key="2"
-              onClick={toggleShowingTimeAgo}
-            >
-              {date}
-            </motion.h2>
-          )}
+          <motion.h2 className={styles.section__header__title}>
+            {date}
+          </motion.h2>
         </AnimatePresence>
         <motion.button
           className={styles.section__header__button}
